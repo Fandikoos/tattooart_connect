@@ -1,0 +1,11 @@
+package com.almozara.tattooart_connect.service.artist;
+
+import com.almozara.tattooart_connect.dto.ArtistDto;
+
+import java.util.List;
+
+public interface ArtistService {
+    ArtistDto createArtist(ArtistDto artistDto);
+
+    List<ArtistDto> findAllArtist();
+}

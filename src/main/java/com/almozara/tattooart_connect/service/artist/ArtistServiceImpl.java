@@ -1,0 +1,42 @@
+package com.almozara.tattooart_connect.service.artist;
+
+import com.almozara.tattooart_connect.domain.ArtistEntity;
+import com.almozara.tattooart_connect.dto.ArtistDto;
+import com.almozara.tattooart_connect.repository.ArtistRepository;
+import com.almozara.tattooart_connect.util.ModelMapperUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class ArtistServiceImpl implements ArtistService{
+
+    @Autowired
+    private ModelMapperUtil modelMapperUtil;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Override
+    public ArtistDto createArtist(ArtistDto artistDto) {
+
+        // Convierte Dto -> Entidad
+        ArtistEntity artistEntity = modelMapperUtil.mapDtoToEntity(artistDto, ArtistEntity.class);
+
+        // Lo guarda en BBDD
+        ArtistEntity savedArtists = artistRepository.save(artistEntity);
+
+        // Convierte Entidad -> Dto (para la respuesta)
+        return modelMapperUtil.mapEntityToDto(savedArtists, ArtistDto.class);
+    }
+
+    @Override
+    public List<ArtistDto> findAllArtist() {
+        // Obtienes las entidades, las transforma en dtos y las devuelve
+        return artistRepository.findAll().stream()
+                .map(artistEntity -> modelMapperUtil.mapEntityToDto(artistEntity, ArtistDto.class))
+                .collect(Collectors.toList());
+    }
+}
