@@ -25,9 +25,11 @@ public class ArtistEntity {
     private static final String DNI_COLUMN = "DNI";
     private static final String PHONE_COLUMN = "PHONE";
     private static final String TATTOO_STUDIO_COLUMN = "TATTOO_STUDIO";
+    public static final String IMAGE_ARTIST_COLUMN = "IMAGE_ARTIST";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = ID_ARTIST_COLUMN)
     private Long idArtist;
 
     @Column(name = ArtistEntity.NAME_COLUMN)
@@ -53,4 +55,7 @@ public class ArtistEntity {
     @Column(name = ArtistEntity.PHONE_COLUMN)
     @NotNull
     private int phone;
+
+    @Column(name = IMAGE_ARTIST_COLUMN)
+    private String imageArtist;
 }
