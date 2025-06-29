@@ -1,5 +1,6 @@
 package com.almozara.tattooart_connect.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -8,7 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity(name =ArtistEntity.TABLE_NAME)
+@Entity
+@Table(name = ArtistEntity.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
 public class ArtistEntity {
@@ -24,8 +26,8 @@ public class ArtistEntity {
     private static final String EMAIL_COLUMN = "EMAIL";
     private static final String DNI_COLUMN = "DNI";
     private static final String PHONE_COLUMN = "PHONE";
-    private static final String TATTOO_STUDIO_COLUMN = "TATTOO_STUDIO";
     public static final String IMAGE_ARTIST_COLUMN = "IMAGE_ARTIST";
+    public static final String TATTOO_STUDIO_COLUMN = "ID_STUDIO_COLUMN";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,8 +56,12 @@ public class ArtistEntity {
 
     @Column(name = ArtistEntity.PHONE_COLUMN)
     @NotNull
-    private int phone;
+    private String phone;
 
     @Column(name = IMAGE_ARTIST_COLUMN)
     private String imageArtist;
+
+    @ManyToOne
+    @JoinColumn(name = TATTOO_STUDIO_COLUMN)
+    private StudioEntity tattooStudio;
 }
