@@ -32,4 +32,23 @@ public class StudioServiceImpl implements StudioService{
 
         return modelMapperUtil.mapEntityToDto(studioEntity, StudioDto.class);
     }
+
+    @Override
+    public void update(Long idStudio, StudioDto studioDto) {
+        StudioEntity existingStudioEntity = studioRepository.findById(idStudio)
+                .orElseThrow(() -> new RuntimeException("Studio not found"));
+
+        if (existingStudioEntity != null){
+            existingStudioEntity.setAddress(studioDto.getAddress());
+            existingStudioEntity.setLogo(studioDto.getLogo());
+            existingStudioEntity.setLatitud(studioDto.getLatitud());
+            existingStudioEntity.setLongitud(studioDto.getLongitud());
+            existingStudioEntity.setName(studioDto.getName());
+            existingStudioEntity.setRating(studioDto.getRating());
+            existingStudioEntity.setDescription(studioDto.getDescription());
+            existingStudioEntity.setOpenSchedule(studioDto.getOpenSchedule());
+            existingStudioEntity.setCloseSchedule(studioDto.getCloseSchedule());
+            studioRepository.save(existingStudioEntity);
+        }
+    }
 }

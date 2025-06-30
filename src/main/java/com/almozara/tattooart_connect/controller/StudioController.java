@@ -28,4 +28,10 @@ public class StudioController {
         return new ResponseEntity<>(studioService.findById(idStudio), HttpStatus.OK);
 
     }
+
+    @PutMapping("/update/{idStudio}")
+    public ResponseEntity<Void> update(@PathVariable Long idStudio, @RequestBody StudioDto studioDto){
+        studioService.update(idStudio, studioDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

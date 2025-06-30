@@ -31,6 +31,10 @@ public class ArtistController {
     @GetMapping("/{idArtist}")
     public ResponseEntity<ArtistDto> findById(@PathVariable Long idArtist){
         return new ResponseEntity<>(artistService.findById(idArtist), HttpStatus.OK);
+    }
 
+    @GetMapping("studio/{idTattooStudio}")
+    public ResponseEntity<List<ArtistDto>> findByIdTattooStudio(@PathVariable Long idTattooStudio){
+        return new ResponseEntity<>(artistService.findByIdStudio(idTattooStudio), HttpStatus.OK);
     }
 }

@@ -42,6 +42,13 @@ public class ArtistServiceImpl implements ArtistService{
     }
 
     @Override
+    public List<ArtistDto> findByIdStudio(Long idTattooStudio) {
+        return artistRepository.findByTattooStudioIdStudio(idTattooStudio).stream()
+                .map(artist -> modelMapperUtil.mapEntityToDto(artist, ArtistDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public ArtistDto findById(Long idArtist) {
         ArtistEntity artistEntity = artistRepository.findById(idArtist)
                 .orElseThrow(() -> new RuntimeException("Artist not found"));

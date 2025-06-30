@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -14,9 +15,13 @@ public class StudioDto {
     private Long idStudio;
     private String name;
     private String address;
-    private long latitud;
-    private long longitud;
+    private float latitud;
+    private float longitud;
     private int rating;
+    private String description;
+    private String logo;
+    private LocalTime openSchedule;
+    private LocalTime closeSchedule;
     private List<ArtistDto> artists;
     private List<StudioImageDto> images;
 }

@@ -9,4 +9,5 @@ public interface StudioService {
 
     List<StudioDto> findAll();
     StudioDto findById(Long idStudio);
+    void update(Long idStudio, StudioDto studioDto);
 }
