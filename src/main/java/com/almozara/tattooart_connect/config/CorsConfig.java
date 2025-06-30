@@ -10,11 +10,9 @@ public class CorsConfig implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")  // Aplica a todos los endpoints
-                .allowedOrigins("http://localhost:4200")  // URL de Angular en desarrollo
-                .allowedOrigins("*")  // En producción usa dominios específicos en vez de *
+                .allowedOrigins("http://localhost:4200", "http://localhost:8080")  // URL de Angular en desarrollo y Spring Boot
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);  // Tiempo de cacheo de pre-flight requests
+                .allowCredentials(true);
     }
 }

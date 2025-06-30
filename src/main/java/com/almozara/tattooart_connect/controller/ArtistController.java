@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = ArtistController.URL_API)
+@RequestMapping(value = ArtistController.URL)
 public class ArtistController {
 
-    public static final String URL_API = "/tattoo/artist";
+    public static final String URL = "/tattoo/artist";
 
     @Autowired
     private ArtistService artistService;
@@ -24,7 +24,17 @@ public class ArtistController {
     }
 
     @PostMapping
-    public ResponseEntity<ArtistDto> create(@RequestBody ArtistDto artistDto){
-        return new ResponseEntity<>(artistService.createArtist(artistDto), HttpStatus.CREATED);
+    public ResponseEntity<ArtistDto> create(@RequestBody ArtistDto artist){
+        return new ResponseEntity<>(artistService.createArtist(artist), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{idArtist}")
+    public ResponseEntity<ArtistDto> findById(@PathVariable Long idArtist){
+        return new ResponseEntity<>(artistService.findById(idArtist), HttpStatus.OK);
+    }
+
+    @GetMapping("studio/{idTattooStudio}")
+    public ResponseEntity<List<ArtistDto>> findByIdTattooStudio(@PathVariable Long idTattooStudio){
+        return new ResponseEntity<>(artistService.findByIdStudio(idTattooStudio), HttpStatus.OK);
     }
 }
