@@ -1,5 +1,6 @@
 package com.almozara.tattooart_connect.controller;
 
+import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.dto.ArtistDto;
 import com.almozara.tattooart_connect.service.artist.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = ArtistController.URL)
+@RequestMapping(ApiConfig.API_BASE_PATH + ArtistController.URL)
 public class ArtistController {
 
-    public static final String URL = "/tattoo/artist";
+    public static final String URL = "/artist";
 
     @Autowired
     private ArtistService artistService;
@@ -36,5 +37,11 @@ public class ArtistController {
     @GetMapping("studio/{idTattooStudio}")
     public ResponseEntity<List<ArtistDto>> findByIdTattooStudio(@PathVariable Long idTattooStudio){
         return new ResponseEntity<>(artistService.findByIdStudio(idTattooStudio), HttpStatus.OK);
+    }
+
+    @PutMapping("/{idArtist}")
+    public ResponseEntity<Void> update(@PathVariable Long idArtist, @RequestBody ArtistDto artistDto){
+        artistService.update(idArtist, artistDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

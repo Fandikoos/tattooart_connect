@@ -55,4 +55,23 @@ public class ArtistServiceImpl implements ArtistService{
 
         return modelMapperUtil.mapEntityToDto(artistEntity, ArtistDto.class);
     }
+
+    @Override
+    public void update(Long idArtist, ArtistDto artistDto) {
+        ArtistEntity existingArtistEntity = artistRepository.findById(idArtist)
+                .orElseThrow(() -> new RuntimeException("Artist not found"));
+
+        if (existingArtistEntity != null){
+            existingArtistEntity.setImageArtist(artistDto.getImageArtist());
+            existingArtistEntity.setDni(artistDto.getDni());
+            existingArtistEntity.setName(artistDto.getName());
+            existingArtistEntity.setPhone(String.valueOf(artistDto.getPhone()));
+            existingArtistEntity.setEmail(artistDto.getEmail());
+            existingArtistEntity.setSurname(artistDto.getSurname());
+            existingArtistEntity.setSecondSurname(artistDto.getSecondSurname());
+            existingArtistEntity.getTattooStudio().setIdStudio(artistDto.getIdTattooStudio());
+            artistRepository.save(existingArtistEntity);
+        }
+
+    }
 }

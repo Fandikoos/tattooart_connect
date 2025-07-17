@@ -35,27 +35,21 @@ public class ArtistEntity {
     private Long idArtist;
 
     @Column(name = ArtistEntity.NAME_COLUMN)
-    @NotNull
     private String name;
 
     @Column(name = ArtistEntity.SURNAME_COLUMN)
-    @NotNull
     private String surname;
 
     @Column(name = ArtistEntity.SECOND_SURNAME_COLUMN)
-    @NotNull
     private String secondSurname;
 
     @Column(name = ArtistEntity.EMAIL_COLUMN)
-    @Email
     private String email;
 
     @Column(name = ArtistEntity.DNI_COLUMN)
-    @NotNull
     private String dni;
 
     @Column(name = ArtistEntity.PHONE_COLUMN)
-    @NotNull
     private String phone;
 
     @Column(name = IMAGE_ARTIST_COLUMN)
