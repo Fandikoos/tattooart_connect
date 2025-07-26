@@ -27,12 +27,16 @@ public class StudioController {
     @GetMapping("/{idStudio}")
     public ResponseEntity<StudioDto> findById(@PathVariable Long idStudio){
         return new ResponseEntity<>(studioService.findById(idStudio), HttpStatus.OK);
-
     }
 
     @PutMapping("/update/{idStudio}")
     public ResponseEntity<Void> update(@PathVariable Long idStudio, @RequestBody StudioDto studioDto){
         studioService.update(idStudio, studioDto);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/protected")
+    public ResponseEntity<List<StudioDto>> pruebaJwt(){
+        return new ResponseEntity<>(studioService.findAll(), HttpStatus.OK);
     }
 }

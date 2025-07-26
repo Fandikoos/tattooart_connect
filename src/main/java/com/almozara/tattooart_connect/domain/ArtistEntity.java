@@ -27,7 +27,7 @@ public class ArtistEntity {
     private static final String DNI_COLUMN = "DNI";
     private static final String PHONE_COLUMN = "PHONE";
     public static final String IMAGE_ARTIST_COLUMN = "IMAGE_ARTIST";
-    public static final String TATTOO_STUDIO_COLUMN = "ID_STUDIO_COLUMN";
+    public static final String TATTOO_STUDIO_COLUMN = "ID_STUDIO";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
