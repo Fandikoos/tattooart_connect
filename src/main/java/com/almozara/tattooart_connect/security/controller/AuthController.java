@@ -22,9 +22,19 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/createUser")
+    @PostMapping("/create")
     public ResponseEntity<CreateUserDto> create(@Valid @RequestBody CreateUserDto userDto){
         return new ResponseEntity<>(userService.create(userDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/createAdmin")
+    public ResponseEntity<CreateUserDto> createAdmin(@Valid @RequestBody CreateUserDto userDto){
+        return new ResponseEntity<>(userService.createAdmin(userDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/createUser")
+    public ResponseEntity<CreateUserDto> createUser(@Valid @RequestBody CreateUserDto userDto){
+        return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

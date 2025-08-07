@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -21,6 +22,6 @@ public class CreateUserDto {
     private String email;
     @NotBlank(message = "Password is required")
     private String password;
-    @NotEmpty(message = "Roles are required")
-    private List<String> roles;
+//    @NotEmpty(message = "Roles are required")
+    private List<String> roles = new ArrayList<>();
 }

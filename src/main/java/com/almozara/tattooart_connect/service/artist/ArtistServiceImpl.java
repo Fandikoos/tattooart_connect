@@ -2,20 +2,19 @@ package com.almozara.tattooart_connect.service.artist;
 
 import com.almozara.tattooart_connect.domain.ArtistEntity;
 import com.almozara.tattooart_connect.dto.ArtistDto;
+import com.almozara.tattooart_connect.mapper.ArtistMapper;
 import com.almozara.tattooart_connect.repository.ArtistRepository;
 import com.almozara.tattooart_connect.service.storage.StorageService;
-import com.almozara.tattooart_connect.util.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ArtistServiceImpl implements ArtistService{
 
     @Autowired
-    private ModelMapperUtil modelMapperUtil;
+    private ArtistMapper artistMapper;
     @Autowired
     private StorageService storageService;
     @Autowired
@@ -24,36 +23,33 @@ public class ArtistServiceImpl implements ArtistService{
     @Override
     public ArtistDto createArtist(ArtistDto artistDto) {
         // Convierte Dto -> Entidad
-        ArtistEntity artistEntity = modelMapperUtil.mapDtoToEntity(artistDto, ArtistEntity.class);
+        ArtistEntity artistEntity = artistMapper.transferToEntity(artistDto);
 
         // Lo guarda en BBDD
         ArtistEntity savedArtists = artistRepository.save(artistEntity);
 
         // Convierte Entidad -> Dto (para la respuesta)
-        return modelMapperUtil.mapEntityToDto(savedArtists, ArtistDto.class);
+        return artistMapper.transferToDto(savedArtists);
     }
 
     @Override
     public List<ArtistDto> findAllArtist() {
         // Obtienes las entidades, las transforma en dtos y las devuelve
-        return artistRepository.findAll().stream()
-                .map(artistEntity -> modelMapperUtil.mapEntityToDto(artistEntity, ArtistDto.class))
-                .collect(Collectors.toList());
+        List<ArtistEntity> artistEntities = artistRepository.findAll();
+        return artistMapper.transferToDtoList(artistEntities);
     }
 
     @Override
     public List<ArtistDto> findByIdStudio(Long idTattooStudio) {
-        return artistRepository.findByTattooStudioIdStudio(idTattooStudio).stream()
-                .map(artist -> modelMapperUtil.mapEntityToDto(artist, ArtistDto.class))
-                .collect(Collectors.toList());
+        List<ArtistEntity> artistEntity = artistRepository.findByTattooStudioIdStudio(idTattooStudio);
+        return artistMapper.transferToDtoList(artistEntity);
     }
 
     @Override
     public ArtistDto findById(Long idArtist) {
         ArtistEntity artistEntity = artistRepository.findById(idArtist)
                 .orElseThrow(() -> new RuntimeException("Artist not found"));
-
-        return modelMapperUtil.mapEntityToDto(artistEntity, ArtistDto.class);
+        return artistMapper.transferToDto(artistEntity);
     }
 
     @Override
@@ -69,7 +65,7 @@ public class ArtistServiceImpl implements ArtistService{
             existingArtistEntity.setEmail(artistDto.getEmail());
             existingArtistEntity.setSurname(artistDto.getSurname());
             existingArtistEntity.setSecondSurname(artistDto.getSecondSurname());
-            existingArtistEntity.getTattooStudio().setIdStudio(artistDto.getIdTattooStudio());
+//            existingArtistEntity.getTattooStudio().setIdStudio(artistDto.getTattooStudio());
             artistRepository.save(existingArtistEntity);
         }
 

@@ -2,8 +2,8 @@ package com.almozara.tattooart_connect.service.studioimage;
 
 import com.almozara.tattooart_connect.domain.StudioImageEntity;
 import com.almozara.tattooart_connect.dto.StudioImageDto;
+import com.almozara.tattooart_connect.mapper.StudioImageMapper;
 import com.almozara.tattooart_connect.repository.StudioImageRepository;
-import com.almozara.tattooart_connect.util.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +14,14 @@ import java.util.stream.Collectors;
 public class StudioImageServiceImpl implements StudioImageService{
 
     @Autowired
-    private ModelMapperUtil modelMapperUtil;
+    private StudioImageMapper studioImageMapper;
     @Autowired
     private StudioImageRepository studioImageRepository;
 
     @Override
     public List<StudioImageDto> findAll() {
-        return studioImageRepository.findAll().stream()
-                .map(studioImage -> modelMapperUtil.mapEntityToDto(studioImage, StudioImageDto.class))
-                .collect(Collectors.toList());
+       List<StudioImageEntity> studioImageEntities = studioImageRepository.findAll();
+       return studioImageMapper.transferToDtoList(studioImageEntities);
     }
 
     @Override
@@ -30,6 +29,6 @@ public class StudioImageServiceImpl implements StudioImageService{
         StudioImageEntity studioImage = studioImageRepository.findById(idStudioImage)
                 .orElseThrow(() -> new RuntimeException("Studio Image not found"));
 
-        return modelMapperUtil.mapEntityToDto(studioImage, StudioImageDto.class);
+        return studioImageMapper.transferToDto(studioImage);
     }
 }
