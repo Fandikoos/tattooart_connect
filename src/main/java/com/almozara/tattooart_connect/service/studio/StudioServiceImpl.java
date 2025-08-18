@@ -2,8 +2,9 @@ package com.almozara.tattooart_connect.service.studio;
 
 import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.dto.StudioDto;
+import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.repository.StudioRepository;
-import com.almozara.tattooart_connect.util.ModelMapperUtil;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +15,14 @@ import java.util.stream.Collectors;
 public class StudioServiceImpl implements StudioService{
 
     @Autowired
-    private ModelMapperUtil modelMapperUtil;
+    private StudioMapper studioMapper;
     @Autowired
     private StudioRepository studioRepository;
 
     @Override
     public List<StudioDto> findAll() {
-        return studioRepository.findAll().stream()
-                .map(studioEntity -> modelMapperUtil.mapEntityToDto(studioEntity, StudioDto.class))
-                .collect(Collectors.toList());
+        List<StudioEntity> studioEntities = studioRepository.findAll();
+        return studioMapper.transferToDtoList(studioEntities);
     }
 
     @Override
@@ -30,8 +30,9 @@ public class StudioServiceImpl implements StudioService{
         StudioEntity studioEntity = studioRepository.findById(idStudio)
                 .orElseThrow(() -> new RuntimeException("Studio not found"));
 
-        return modelMapperUtil.mapEntityToDto(studioEntity, StudioDto.class);
+        return studioMapper.transferToDto(studioEntity);
     }
+
 
     @Override
     public void update(Long idStudio, StudioDto studioDto) {
@@ -49,6 +50,22 @@ public class StudioServiceImpl implements StudioService{
             existingStudioEntity.setOpenSchedule(studioDto.getOpenSchedule());
             existingStudioEntity.setCloseSchedule(studioDto.getCloseSchedule());
             studioRepository.save(existingStudioEntity);
+        }
+    }
+
+    @Override
+    public StudioDto create(StudioDto studioDto) {
+        StudioEntity studioEntity = studioMapper.transferToEntity(studioDto);
+        studioRepository.save(studioEntity);
+        return studioMapper.transferToDto(studioEntity);
+    }
+
+    @Override
+    public void delete(Long idStudio) {
+        StudioEntity studioEntity = studioRepository.findById(idStudio)
+                .orElseThrow(() -> new RuntimeException("Studio not found"));
+        if (studioEntity != null){
+            studioRepository.delete(studioEntity);
         }
     }
 }

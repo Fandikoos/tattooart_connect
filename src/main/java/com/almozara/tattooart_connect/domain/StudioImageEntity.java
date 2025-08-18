@@ -1,6 +1,5 @@
 package com.almozara.tattooart_connect.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,11 +14,11 @@ public class StudioImageEntity {
 
     public static final String TABLE_NAME = "ET_STUDIO_IMAGE";
 
-    private static final String ID_STUDIO_IMAGE_COLUMN = "ID_STUDIO_IMAGE";
-    private static final String IMAGE_URL_COLUMN = "IMAGE_URL";
-    private static final String NAME_COLUMN = "NAME";
-    private static final String DESCRIPTION_COLUMN = "DESCRIPTION";
-    private static final String ID_STUDIO = "ID_STUDIO";
+    public static final String ID_STUDIO_IMAGE_COLUMN = "ID_STUDIO_IMAGE";
+    public static final String IMAGE_URL_COLUMN = "IMAGE_URL";
+    public static final String NAME_COLUMN = "NAME";
+    public static final String DESCRIPTION_COLUMN = "DESCRIPTION";
+    public static final String ID_STUDIO = "ID_STUDIO";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +36,6 @@ public class StudioImageEntity {
 
     @ManyToOne
     @JoinColumn(name = ID_STUDIO)
-    private StudioEntity studio;
+    private StudioEntity tattooStudio;
 
 }

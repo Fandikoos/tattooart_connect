@@ -1,5 +1,6 @@
 package com.almozara.tattooart_connect.controller;
 
+import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.dto.StudioImageDto;
 import com.almozara.tattooart_connect.service.studioimage.StudioImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = StudioImageController.URL)
+@RequestMapping(ApiConfig.API_BASE_PATH + StudioImageController.URL)
 public class StudioImageController {
 
-    public static final String URL = "/tattoo/studioimage";
+    public static final String URL = "/studioimage";
 
     @Autowired
     private StudioImageService studioImageService;

@@ -10,4 +10,6 @@ public interface ArtistService {
     List<ArtistDto> findAllArtist();
     List<ArtistDto> findByIdStudio(Long idTattooStudio);
     ArtistDto findById(Long idArtist);
+    void update(Long idArtist, ArtistDto artistDto);
+
 }

@@ -1,7 +1,9 @@
 package com.almozara.tattooart_connect.controller;
 
+import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.dto.ArtistDto;
 import com.almozara.tattooart_connect.service.artist.ArtistService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = ArtistController.URL)
+@RequestMapping(ApiConfig.API_BASE_PATH + ArtistController.URL)
 public class ArtistController {
 
-    public static final String URL = "/tattoo/artist";
+    public static final String URL = "/artist";
 
     @Autowired
     private ArtistService artistService;
@@ -23,8 +25,9 @@ public class ArtistController {
         return new ResponseEntity<>(artistService.findAllArtist(), HttpStatus.OK);
     }
 
+
     @PostMapping
-    public ResponseEntity<ArtistDto> create(@RequestBody ArtistDto artist){
+    public ResponseEntity<ArtistDto> create(@RequestBody @Valid ArtistDto artist){
         return new ResponseEntity<>(artistService.createArtist(artist), HttpStatus.CREATED);
     }
 
@@ -36,5 +39,11 @@ public class ArtistController {
     @GetMapping("studio/{idTattooStudio}")
     public ResponseEntity<List<ArtistDto>> findByIdTattooStudio(@PathVariable Long idTattooStudio){
         return new ResponseEntity<>(artistService.findByIdStudio(idTattooStudio), HttpStatus.OK);
+    }
+
+    @PutMapping("/{idArtist}")
+    public ResponseEntity<Void> update(@PathVariable Long idArtist, @RequestBody ArtistDto artistDto){
+        artistService.update(idArtist, artistDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

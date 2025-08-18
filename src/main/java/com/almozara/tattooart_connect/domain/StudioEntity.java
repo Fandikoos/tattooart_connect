@@ -20,16 +20,16 @@ public class StudioEntity {
 
     public static final String TABLE_NAME = "ET_STUDIO";
 
-    private static final String ID_STUDIO_COLUMN = "ID_STUDIO";
-    private static final String NAME_COLUMN = "NAME";
-    private static final String ADDRESS_COLUMN = "ADDRESS";
-    private static final String LATITUD_COLUMN = "LATITUD";
-    private static final String LONGITUD_COLUMN = "LONGITUD";
-    private static final String RATING_COLUMN = "RATING";
-    private static final String LOGO_COLUMN = "LOGO";
-    private static final String DESCRIPTION_COLUMN = "DESCRIPTION";
-    private static final String OPEN_SCHEDULE_COLUMN = "OPEN_SCHEDULE";
-    private static final String CLOSE_SCHEDULE_COLUMN = "CLOSE_SCHEDULE";
+    public static final String ID_STUDIO_COLUMN = "ID_STUDIO";
+    public static final String NAME_COLUMN = "NAME";
+    public static final String ADDRESS_COLUMN = "ADDRESS";
+    public static final String LATITUD_COLUMN = "LATITUD";
+    public static final String LONGITUD_COLUMN = "LONGITUD";
+    public static final String RATING_COLUMN = "RATING";
+    public static final String LOGO_COLUMN = "LOGO";
+    public static final String DESCRIPTION_COLUMN = "DESCRIPTION";
+    public static final String OPEN_SCHEDULE_COLUMN = "OPEN_SCHEDULE";
+    public static final String CLOSE_SCHEDULE_COLUMN = "CLOSE_SCHEDULE";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,9 +63,11 @@ public class StudioEntity {
     @Column(name = LOGO_COLUMN)
     private String logo;
 
-    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ArtistEntity> artists;
 
-    @OneToMany(mappedBy = "studio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<StudioImageEntity> images;
 }
