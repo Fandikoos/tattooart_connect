@@ -3,6 +3,7 @@ package com.almozara.tattooart_connect.controller;
 import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.dto.ArtistDto;
 import com.almozara.tattooart_connect.service.artist.ArtistService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,9 @@ public class ArtistController {
         return new ResponseEntity<>(artistService.findAllArtist(), HttpStatus.OK);
     }
 
+
     @PostMapping
-    public ResponseEntity<ArtistDto> create(@RequestBody ArtistDto artist){
+    public ResponseEntity<ArtistDto> create(@RequestBody @Valid ArtistDto artist){
         return new ResponseEntity<>(artistService.createArtist(artist), HttpStatus.CREATED);
     }
 

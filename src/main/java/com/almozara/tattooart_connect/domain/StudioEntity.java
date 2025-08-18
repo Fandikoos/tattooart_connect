@@ -67,7 +67,7 @@ public class StudioEntity {
     @JsonIgnore
     private List<ArtistEntity> artists;
 
-    @OneToMany(mappedBy = "studio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<StudioImageEntity> images;
 }

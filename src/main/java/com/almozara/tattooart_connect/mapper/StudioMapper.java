@@ -6,7 +6,10 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = { ArtistMapper.class })
+@Mapper(componentModel = "spring", uses = {
+        ArtistMapper.class,
+        StudioImageMapper.class
+})
 public interface StudioMapper {
 
     // Mapeo de entidad a dto

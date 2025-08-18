@@ -1,6 +1,5 @@
 package com.almozara.tattooart_connect.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,6 +36,6 @@ public class StudioImageEntity {
 
     @ManyToOne
     @JoinColumn(name = ID_STUDIO)
-    private StudioEntity studio;
+    private StudioEntity tattooStudio;
 
 }

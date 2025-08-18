@@ -1,6 +1,5 @@
 package com.almozara.tattooart_connect.security.domain;
 
-import com.almozara.tattooart_connect.domain.ArtistEntity;
 import com.almozara.tattooart_connect.util.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

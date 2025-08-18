@@ -4,6 +4,7 @@ import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.dto.StudioDto;
 import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.repository.StudioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,7 @@ public class StudioServiceImpl implements StudioService{
         return studioMapper.transferToDto(studioEntity);
     }
 
+
     @Override
     public void update(Long idStudio, StudioDto studioDto) {
         StudioEntity existingStudioEntity = studioRepository.findById(idStudio)
@@ -48,6 +50,22 @@ public class StudioServiceImpl implements StudioService{
             existingStudioEntity.setOpenSchedule(studioDto.getOpenSchedule());
             existingStudioEntity.setCloseSchedule(studioDto.getCloseSchedule());
             studioRepository.save(existingStudioEntity);
+        }
+    }
+
+    @Override
+    public StudioDto create(StudioDto studioDto) {
+        StudioEntity studioEntity = studioMapper.transferToEntity(studioDto);
+        studioRepository.save(studioEntity);
+        return studioMapper.transferToDto(studioEntity);
+    }
+
+    @Override
+    public void delete(Long idStudio) {
+        StudioEntity studioEntity = studioRepository.findById(idStudio)
+                .orElseThrow(() -> new RuntimeException("Studio not found"));
+        if (studioEntity != null){
+            studioRepository.delete(studioEntity);
         }
     }
 }

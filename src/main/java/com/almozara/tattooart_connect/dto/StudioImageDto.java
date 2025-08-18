@@ -14,5 +14,5 @@ public class StudioImageDto {
     private String imageUrl;
     private String name;
     private String description;
-    private Long idStudio;
+    private Long idTattooStudio;
 }

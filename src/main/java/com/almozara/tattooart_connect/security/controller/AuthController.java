@@ -2,6 +2,8 @@ package com.almozara.tattooart_connect.security.controller;
 
 import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.controller.ArtistController;
+import com.almozara.tattooart_connect.global.dto.MessageDto;
+import com.almozara.tattooart_connect.mapper.UserMapper;
 import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.almozara.tattooart_connect.security.dto.CreateUserDto;
 import com.almozara.tattooart_connect.security.dto.JwtTokenDto;
@@ -21,6 +23,8 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
     @PostMapping("/create")
     public ResponseEntity<CreateUserDto> create(@Valid @RequestBody CreateUserDto userDto){
@@ -28,13 +32,16 @@ public class AuthController {
     }
 
     @PostMapping("/createAdmin")
-    public ResponseEntity<CreateUserDto> createAdmin(@Valid @RequestBody CreateUserDto userDto){
-        return new ResponseEntity<>(userService.createAdmin(userDto), HttpStatus.CREATED);
+    public ResponseEntity<MessageDto> createAdmin(@Valid @RequestBody CreateUserDto userDto){
+        userService.createAdmin(userDto);
+        return ResponseEntity.ok(new MessageDto(HttpStatus.OK, "admin " + userDto.getUsername() + " have been register succesfully"));
     }
 
     @PostMapping("/createUser")
-    public ResponseEntity<CreateUserDto> createUser(@Valid @RequestBody CreateUserDto userDto){
-        return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);
+    public ResponseEntity<MessageDto> createUser(@Valid @RequestBody CreateUserDto userDto){
+        userService.createUser(userDto);
+        return ResponseEntity.ok(new MessageDto(HttpStatus.OK, "user " + userDto.getUsername() + " have been register succesfully"));
+
     }
 
     @PostMapping("/login")
