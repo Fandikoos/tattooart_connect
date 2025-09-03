@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,5 +68,14 @@ public class StudioServiceImpl implements StudioService{
         if (studioEntity != null){
             studioRepository.delete(studioEntity);
         }
+    }
+
+    @Override
+    public List<StudioDto> findByName(String name) {
+        List<StudioEntity> studioEntitiesByName = studioRepository.findByNameContainingIgnoreCase(name);
+        if (studioEntitiesByName != null && !studioEntitiesByName.isEmpty()){
+            return studioMapper.transferToDtoList(studioEntitiesByName);
+        }
+        return new ArrayList<>();
     }
 }

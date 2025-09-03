@@ -33,10 +33,9 @@ public class StudioManagerTest {
     @Test
     void testCreate(){
         // 1. Preparar datos de prueba
-        StudioDto createStudioDto = new StudioDto();
-        StudioEntity createStudioEntity = new StudioEntity();
-        StudioDto expectedCreateStudioDto = new StudioDto();
-        createStudios(createStudioDto, createStudioEntity, expectedCreateStudioDto);
+        StudioDto createStudioDto = createStudioDto(1L, "Prueba Estudio 1", "Avenida Inventada, 1", 3);
+        StudioEntity createStudioEntity = createStudioEntity(1L, "Prueba Estudio 1", "Avenida Inventada, 1", 3);
+        StudioDto expectedCreateStudioDto = createStudioDto(1L, "Prueba Estudio 1", "Avenida Inventada, 1", 3);
 
         // 2. Configurar los mocks
         // Le decimos al mock del mapper: "Cuando te pasen este DTO, devuelve esta Entity"
@@ -62,10 +61,9 @@ public class StudioManagerTest {
 
     @Test
     void testUpdate(){
-        StudioDto updateStudioDto = new StudioDto();
-        StudioEntity existingStudioEntity = new StudioEntity();
-        StudioEntity updatedStudioEntity = new StudioEntity();
-        updateStudios(updateStudioDto, existingStudioEntity, updatedStudioEntity);
+        StudioDto updateStudioDto = createStudioDto(1L, "Prueba Estudio 1", "Avenida Inventada, 1", 3);;
+        StudioEntity existingStudioEntity = createStudioEntity(1L, "Prueba Estudio 1", "Avenida Inventada, 1", 3);;
+        StudioEntity updatedStudioEntity = createStudioEntity(1L, "Prueba Estudio 1", "Avenida Inventada, 1", 3);
 
         when(studioRepository.findById(existingStudioEntity.getIdStudio())).thenReturn(Optional.of(existingStudioEntity));
         when(studioRepository.save(updatedStudioEntity)).thenReturn(updatedStudioEntity);
@@ -98,34 +96,21 @@ public class StudioManagerTest {
         verify(studioRepository).delete(deleteStudio);
     }
 
-    private void createStudios(StudioDto createStudioDto, StudioEntity studioEntity, StudioDto expectedStudioDto){
-        createStudioDto.setIdStudio(1L);
-        createStudioDto.setName("Prueba Estudio 1");
-        createStudioDto.setAddress("Avenida Inventada, 1");
-
-        studioEntity.setIdStudio(1L);
-        studioEntity.setName("Prueba Estudio 1");
-        studioEntity.setAddress("Avenida Inventada, 1");
-
-        expectedStudioDto.setIdStudio(1L);
-        expectedStudioDto.setName("Prueba Estudio 1");
-        expectedStudioDto.setAddress("Avenida Inventada, 1");
+    private StudioDto createStudioDto(Long id, String name, String address, int rating) {
+        StudioDto dto = new StudioDto();
+        dto.setIdStudio(id);
+        dto.setName(name);
+        dto.setAddress(address);
+        dto.setRating(rating);
+        return dto;
     }
 
-    private void updateStudios(StudioDto updateStudioDto, StudioEntity studioEntity, StudioEntity expectedStudioDto){
-        updateStudioDto.setIdStudio(1L);
-        updateStudioDto.setName("Prueba Estudio modificado");
-        updateStudioDto.setAddress("Avenida Almozara 75");
-        updateStudioDto.setRating(5);
-
-        studioEntity.setIdStudio(1L);
-        studioEntity.setName("Prueba Estudio 1");
-        studioEntity.setAddress("Avenida Inventada, 1");
-        studioEntity.setRating(4);
-
-        expectedStudioDto.setIdStudio(1L);
-        expectedStudioDto.setName("Prueba Estudio modificado");
-        expectedStudioDto.setAddress("Avenida Almozara 75");
-        expectedStudioDto.setRating(5);
+    private StudioEntity createStudioEntity(Long id, String name, String address, int rating) {
+        StudioEntity entity = new StudioEntity();
+        entity.setIdStudio(id);
+        entity.setName(name);
+        entity.setAddress(address);
+        entity.setRating(rating);
+        return entity;
     }
 }

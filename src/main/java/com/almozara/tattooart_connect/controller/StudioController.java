@@ -5,6 +5,7 @@ import com.almozara.tattooart_connect.dto.StudioDto;
 import com.almozara.tattooart_connect.service.studio.StudioService;
 import com.almozara.tattooart_connect.util.helper.AuthorityHelper;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,12 @@ public class StudioController {
         return new ResponseEntity<>(studioService.findById(idStudio), HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<StudioDto>> findByName(@RequestParam String name){
+        List<StudioDto> studiosByName = studioService.findByName(name);
+        return new ResponseEntity<>(studiosByName, HttpStatus.OK);
+    }
+
     @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
     @DeleteMapping("/{idStudio}")
     public ResponseEntity<Void> delete(@PathVariable Long idStudio){
@@ -46,7 +53,7 @@ public class StudioController {
         return new ResponseEntity<>(studioService.create(studioDto), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
     @PutMapping("/update/{idStudio}")
     public ResponseEntity<Void> update(@PathVariable Long idStudio, @RequestBody @Valid StudioDto studioDto){
         studioService.update(idStudio, studioDto);

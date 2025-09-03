@@ -5,6 +5,7 @@ import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.almozara.tattooart_connect.security.dto.CreateUserDto;
 import com.almozara.tattooart_connect.security.dto.JwtTokenDto;
 import com.almozara.tattooart_connect.security.dto.LoginUserDto;
+import com.almozara.tattooart_connect.security.dto.ProfileUserDto;
 import com.almozara.tattooart_connect.security.jwt.JwtProvider;
 import com.almozara.tattooart_connect.security.repository.UserRepository;
 import com.almozara.tattooart_connect.util.enums.RoleEnum;
@@ -94,6 +95,9 @@ public class UserService {
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(authentication);
-        return new JwtTokenDto(token);
+        UserEntity user = userRepository.findByUsername(dto.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        ProfileUserDto userDto = userMapper.transferProfileUserDto(user);
+        return new JwtTokenDto(token, userDto);
     }
 }

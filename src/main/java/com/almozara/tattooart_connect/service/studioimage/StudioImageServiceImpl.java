@@ -25,6 +25,35 @@ public class StudioImageServiceImpl implements StudioImageService{
     }
 
     @Override
+    public StudioImageDto create(StudioImageDto studioImageDto) {
+        StudioImageEntity studioImageEntity = studioImageMapper.transferToEntity(studioImageDto);
+        StudioImageEntity savedStudioImage = studioImageRepository.save(studioImageEntity);
+        return studioImageMapper.transferToDto(savedStudioImage);
+    }
+
+    @Override
+    public void delete(Long idStudioImage) {
+        StudioImageEntity studioImageEntity = studioImageRepository.findById(idStudioImage)
+                .orElseThrow(() -> new RuntimeException("Studio image not found"));
+        if (studioImageEntity != null){
+            studioImageRepository.delete(studioImageEntity);
+        }
+    }
+
+    @Override
+    public void update(Long idStudioImage, StudioImageDto studioImageDto) {
+        StudioImageEntity existingStudioImageEntity = studioImageRepository.findById(idStudioImage)
+                .orElseThrow(() -> new RuntimeException("Studio image not found"));
+        if (existingStudioImageEntity != null){
+            existingStudioImageEntity.setName(studioImageDto.getName());
+            existingStudioImageEntity.setImageUrl(studioImageDto.getImageUrl());
+            existingStudioImageEntity.setDescription(studioImageDto.getDescription());
+            existingStudioImageEntity.getTattooStudio().setIdStudio(studioImageDto.getIdTattooStudio());
+            studioImageRepository.save(existingStudioImageEntity);
+        }
+    }
+
+    @Override
     public StudioImageDto findById(Long idStudioImage) {
         StudioImageEntity studioImage = studioImageRepository.findById(idStudioImage)
                 .orElseThrow(() -> new RuntimeException("Studio Image not found"));

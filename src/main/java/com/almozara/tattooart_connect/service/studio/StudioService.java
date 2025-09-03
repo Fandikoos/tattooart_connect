@@ -11,4 +11,5 @@ public interface StudioService {
     void update(Long idStudio, StudioDto studioDto);
     StudioDto create (StudioDto studioDto);
     void delete (Long idStudio);
+    List<StudioDto> findByName(String name);
 }

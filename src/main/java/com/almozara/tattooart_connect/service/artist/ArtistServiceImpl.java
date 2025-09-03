@@ -65,9 +65,18 @@ public class ArtistServiceImpl implements ArtistService{
             existingArtistEntity.setEmail(artistDto.getEmail());
             existingArtistEntity.setSurname(artistDto.getSurname());
             existingArtistEntity.setSecondSurname(artistDto.getSecondSurname());
-//            existingArtistEntity.getTattooStudio().setIdStudio(artistDto.getTattooStudio());
+            existingArtistEntity.getTattooStudio().setIdStudio(artistDto.getIdTattooStudio());
             artistRepository.save(existingArtistEntity);
         }
 
+    }
+
+    @Override
+    public void delete(Long idArtist) {
+        ArtistEntity artistEntity = artistRepository.findById(idArtist)
+                .orElseThrow(() -> new RuntimeException("Artist not found"));
+        if (artistEntity != null){
+            artistRepository.delete(artistEntity);
+        }
     }
 }
