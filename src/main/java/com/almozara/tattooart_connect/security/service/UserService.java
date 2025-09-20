@@ -9,6 +9,7 @@ import com.almozara.tattooart_connect.security.dto.ProfileUserDto;
 import com.almozara.tattooart_connect.security.jwt.JwtProvider;
 import com.almozara.tattooart_connect.security.repository.UserRepository;
 import com.almozara.tattooart_connect.util.enums.RoleEnum;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,18 +22,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private JwtProvider jwtProvider;
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+    private final AuthenticationManager authenticationManager;
 
     public CreateUserDto create(CreateUserDto userDto){
         if (userRepository.existsByUsername(userDto.getUsername())){

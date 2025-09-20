@@ -5,6 +5,7 @@ import com.almozara.tattooart_connect.dto.StudioImageDto;
 import com.almozara.tattooart_connect.service.studioimage.StudioImageService;
 import com.almozara.tattooart_connect.util.helper.AuthorityHelper;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping(ApiConfig.API_BASE_PATH + StudioImageController.URL)
+@RequiredArgsConstructor
 public class StudioImageController {
 
     public static final String URL = "/studioimage";
 
-    @Autowired
-    private StudioImageService studioImageService;
+    private final StudioImageService studioImageService;
 
     @GetMapping
     public ResponseEntity<List<StudioImageDto>> getAll(){

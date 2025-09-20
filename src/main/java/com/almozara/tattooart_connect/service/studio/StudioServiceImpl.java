@@ -5,6 +5,7 @@ import com.almozara.tattooart_connect.dto.StudioDto;
 import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.repository.StudioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class StudioServiceImpl implements StudioService{
 
-    @Autowired
-    private StudioMapper studioMapper;
-    @Autowired
-    private StudioRepository studioRepository;
+    private final StudioMapper studioMapper;
+    private final StudioRepository studioRepository;
 
     @Override
     public List<StudioDto> findAll() {
@@ -75,6 +75,15 @@ public class StudioServiceImpl implements StudioService{
         List<StudioEntity> studioEntitiesByName = studioRepository.findByNameContainingIgnoreCase(name);
         if (studioEntitiesByName != null && !studioEntitiesByName.isEmpty()){
             return studioMapper.transferToDtoList(studioEntitiesByName);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<StudioDto> findByIdsStudios(List<Long> idsStudios) {
+        List<StudioEntity> studioEntitiesByIds = studioRepository.findByidStudioIn(idsStudios);
+        if (studioEntitiesByIds != null && !studioEntitiesByIds.isEmpty()){
+            return studioMapper.transferToDtoList(studioEntitiesByIds);
         }
         return new ArrayList<>();
     }

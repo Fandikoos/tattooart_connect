@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface StudioRepository extends JpaRepository<StudioEntity, Long> {
     List<StudioEntity> findByNameContainingIgnoreCase(String name);
+    List<StudioEntity> findByidStudioIn(List<Long> idStudios);
 }

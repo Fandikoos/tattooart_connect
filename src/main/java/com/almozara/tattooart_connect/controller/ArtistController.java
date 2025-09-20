@@ -5,6 +5,7 @@ import com.almozara.tattooart_connect.dto.ArtistDto;
 import com.almozara.tattooart_connect.service.artist.ArtistService;
 import com.almozara.tattooart_connect.util.helper.AuthorityHelper;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping(ApiConfig.API_BASE_PATH + ArtistController.URL)
+@RequiredArgsConstructor
 public class ArtistController {
 
     public static final String URL = "/artist";
 
-    @Autowired
-    private ArtistService artistService;
+    private final ArtistService artistService;
 
     @GetMapping
     public ResponseEntity<List<ArtistDto>> getAllArtist(){
