@@ -22,13 +22,15 @@ public class UserEntity {
     public static final String EMAIL_COLUMN = "EMAIL";
     public static final String PASSWORD_COLUMN = "PASSWORD";
     public static final String ROLE_COLUMN = "ROLE";
+    public static final String PHONE_COLUMN = "PHONE";
+    public static final String DESCRIPTION_COLUMN = "DESCRIPTION";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID_USER_COLUMN)
     private Long idUser;
 
-    @Column(name = USERNAME_COLUMN)
+    @Column(name = USERNAME_COLUMN, unique = true)
     private String username;
 
     @Column(name = EMAIL_COLUMN)
@@ -36,6 +38,12 @@ public class UserEntity {
 
     @Column(name = PASSWORD_COLUMN)
     private String password;
+
+    @Column(name = PHONE_COLUMN)
+    private int phone;
+
+    @Column(name = DESCRIPTION_COLUMN)
+    private String description;
 
     // Colección de roles, se crea una tabla de roles para gestionarlo
     @ElementCollection(targetClass = RoleEnum.class, fetch = FetchType.EAGER)

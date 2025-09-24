@@ -3,29 +3,32 @@ package com.almozara.tattooart_connect.controller;
 import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.dto.ArtistDto;
 import com.almozara.tattooart_connect.service.artist.ArtistService;
+import com.almozara.tattooart_connect.util.helper.AuthorityHelper;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(ApiConfig.API_BASE_PATH + ArtistController.URL)
+@RequiredArgsConstructor
 public class ArtistController {
 
     public static final String URL = "/artist";
 
-    @Autowired
-    private ArtistService artistService;
+    private final ArtistService artistService;
 
     @GetMapping
     public ResponseEntity<List<ArtistDto>> getAllArtist(){
         return new ResponseEntity<>(artistService.findAllArtist(), HttpStatus.OK);
     }
 
-
+    @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
     @PostMapping
     public ResponseEntity<ArtistDto> create(@RequestBody @Valid ArtistDto artist){
         return new ResponseEntity<>(artistService.createArtist(artist), HttpStatus.CREATED);
@@ -41,9 +44,17 @@ public class ArtistController {
         return new ResponseEntity<>(artistService.findByIdStudio(idTattooStudio), HttpStatus.OK);
     }
 
+    @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
     @PutMapping("/{idArtist}")
-    public ResponseEntity<Void> update(@PathVariable Long idArtist, @RequestBody ArtistDto artistDto){
+    public ResponseEntity<Void> update(@PathVariable Long idArtist, @RequestBody @Valid ArtistDto artistDto){
         artistService.update(idArtist, artistDto);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
+    @DeleteMapping("/{idArtist}")
+    public ResponseEntity<Void> delete (@PathVariable Long idArtist){
+        artistService.delete(idArtist);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

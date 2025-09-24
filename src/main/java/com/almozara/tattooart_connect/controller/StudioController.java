@@ -5,6 +5,8 @@ import com.almozara.tattooart_connect.dto.StudioDto;
 import com.almozara.tattooart_connect.service.studio.StudioService;
 import com.almozara.tattooart_connect.util.helper.AuthorityHelper;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +17,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping(ApiConfig.API_BASE_PATH + StudioController.URL)
+@RequiredArgsConstructor
 public class StudioController {
 
     public static final String URL = "/studio";
 
-    @Autowired
-    private StudioService studioService;
+    private final StudioService studioService;
     // Ejemplo para poner roles a rutas, en este caso seria cualquiera de los roles, pero quiero que esta ruta no necesite roles
 //    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
@@ -31,6 +33,19 @@ public class StudioController {
     @GetMapping("/{idStudio}")
     public ResponseEntity<StudioDto> findById(@PathVariable Long idStudio){
         return new ResponseEntity<>(studioService.findById(idStudio), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<StudioDto>> findByName(@RequestParam String name){
+        List<StudioDto> studiosByName = studioService.findByName(name);
+        return new ResponseEntity<>(studiosByName, HttpStatus.OK);
+    }
+
+    @PreAuthorize(AuthorityHelper.ROLE_USER)
+    @GetMapping("/byIdsStudios")
+    public ResponseEntity<List<StudioDto>> findByIdsStudios(@RequestParam List<Long> idsStudios){
+        List<StudioDto> studiosByIds = studioService.findByIdsStudios(idsStudios);
+        return new ResponseEntity<>(studiosByIds, HttpStatus.OK);
     }
 
     @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
@@ -46,7 +61,7 @@ public class StudioController {
         return new ResponseEntity<>(studioService.create(studioDto), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
     @PutMapping("/update/{idStudio}")
     public ResponseEntity<Void> update(@PathVariable Long idStudio, @RequestBody @Valid StudioDto studioDto){
         studioService.update(idStudio, studioDto);

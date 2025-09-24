@@ -2,6 +2,7 @@ package com.almozara.tattooart_connect.security.config;
 
 import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.controller.ArtistController;
+import com.almozara.tattooart_connect.controller.FavouriteController;
 import com.almozara.tattooart_connect.controller.StudioController;
 import com.almozara.tattooart_connect.security.controller.AuthController;
 import com.almozara.tattooart_connect.security.jwt.JwtEntryPoint;
@@ -61,8 +62,10 @@ public class MainSecurityConfig {
                                 .requestMatchers(ApiConfig.API_BASE_PATH + AuthController.URL + "/**").permitAll()
                                 .requestMatchers(ApiConfig.API_BASE_PATH + ArtistController.URL + "/**").permitAll()
                                 .requestMatchers(ApiConfig.API_BASE_PATH + StudioController.URL + "/**").permitAll()
+                                .requestMatchers(ApiConfig.API_BASE_PATH + FavouriteController.URL + "/**").permitAll()
 
-                        // Rutas privadas que si que requieren token
+                                // Rutas privadas que si que requieren token
+//                                .requestMatchers(ApiConfig.API_BASE_PATH + FavouriteController.URL + "/favourite/**").authenticated()
 //                         .requestMatchers(ApiConfig.API_BASE_PATH + StudioController.URL + "/protected/**").authenticated() // Ejemplo futuro
                         // .requestMatchers(ApiConfig.API_BASE_PATH + "/appointments/**").authenticated() // Ejemplo futuro
 

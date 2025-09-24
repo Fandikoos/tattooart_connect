@@ -7,9 +7,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.security.PublicKey;
-
-public class GlobalException {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<MessageDto> badCredentialsException(BadCredentialsException e){

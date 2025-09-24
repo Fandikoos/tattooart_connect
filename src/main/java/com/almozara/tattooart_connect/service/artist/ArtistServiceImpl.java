@@ -5,20 +5,18 @@ import com.almozara.tattooart_connect.dto.ArtistDto;
 import com.almozara.tattooart_connect.mapper.ArtistMapper;
 import com.almozara.tattooart_connect.repository.ArtistRepository;
 import com.almozara.tattooart_connect.service.storage.StorageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ArtistServiceImpl implements ArtistService{
 
-    @Autowired
-    private ArtistMapper artistMapper;
-    @Autowired
-    private StorageService storageService;
-    @Autowired
-    private ArtistRepository artistRepository;
+    private final ArtistMapper artistMapper;
+    private final ArtistRepository artistRepository;
 
     @Override
     public ArtistDto createArtist(ArtistDto artistDto) {
@@ -65,9 +63,18 @@ public class ArtistServiceImpl implements ArtistService{
             existingArtistEntity.setEmail(artistDto.getEmail());
             existingArtistEntity.setSurname(artistDto.getSurname());
             existingArtistEntity.setSecondSurname(artistDto.getSecondSurname());
-//            existingArtistEntity.getTattooStudio().setIdStudio(artistDto.getTattooStudio());
+            existingArtistEntity.getTattooStudio().setIdStudio(artistDto.getIdTattooStudio());
             artistRepository.save(existingArtistEntity);
         }
 
+    }
+
+    @Override
+    public void delete(Long idArtist) {
+        ArtistEntity artistEntity = artistRepository.findById(idArtist)
+                .orElseThrow(() -> new RuntimeException("Artist not found"));
+        if (artistEntity != null){
+            artistRepository.delete(artistEntity);
+        }
     }
 }

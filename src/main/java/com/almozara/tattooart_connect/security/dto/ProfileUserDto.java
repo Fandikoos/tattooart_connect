@@ -7,7 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtTokenDto {
-    private String token;
-    private ProfileUserDto userProfile;
+public class ProfileUserDto {
+
+    private Long idUser;
+    private String username;
+    private String email;
+    private int phone;
+    private String description;
 }

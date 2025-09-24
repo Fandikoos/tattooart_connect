@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface StudioImageService {
     List<StudioImageDto> findAll();
-
+    StudioImageDto create(StudioImageDto studioImageDto);
+    void delete(Long idStudioImage);
+    void update(Long idStudioImage, StudioImageDto studioImageDto);
     StudioImageDto findById(Long idStudioImage);
 }
