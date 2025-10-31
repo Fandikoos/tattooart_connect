@@ -24,7 +24,6 @@ public class AuthController {
     public static final String URL = "/auth";
 
     private final UserService userService;
-    private final UserMapper userMapper;
 
     @PostMapping("/create")
     public ResponseEntity<CreateUserDto> create(@Valid @RequestBody CreateUserDto userDto){

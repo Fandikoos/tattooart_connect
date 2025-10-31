@@ -56,6 +56,6 @@ public class ArtistEntity {
     private String imageArtist;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = TATTOO_STUDIO_COLUMN)
+    @JoinColumn(name = TATTOO_STUDIO_COLUMN, referencedColumnName = StudioEntity.ID_STUDIO_COLUMN)
     private StudioEntity tattooStudio;
 }

@@ -41,6 +41,13 @@ public class StudioController {
         return new ResponseEntity<>(studiosByName, HttpStatus.OK);
     }
 
+    @GetMapping("/studios/{idUser}")
+    @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
+    public ResponseEntity<List<StudioDto>> findByUser(@PathVariable Long idUser){
+        List<StudioDto> studiosByUser = studioService.findByUser(idUser);
+        return new ResponseEntity<>(studiosByUser, HttpStatus.OK);
+    }
+
     @PreAuthorize(AuthorityHelper.ROLE_USER)
     @GetMapping("/byIdsStudios")
     public ResponseEntity<List<StudioDto>> findByIdsStudios(@RequestParam List<Long> idsStudios){

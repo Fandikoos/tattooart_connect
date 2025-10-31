@@ -31,4 +31,5 @@ public class StudioDto {
     private LocalTime closeSchedule;
     private List<ArtistDto> artists;
     private List<StudioImageDto> images;
+    private Long idUser;
 }
