@@ -1,5 +1,6 @@
 package com.almozara.tattooart_connect.domain;
 
+import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -30,6 +31,7 @@ public class StudioEntity {
     public static final String DESCRIPTION_COLUMN = "DESCRIPTION";
     public static final String OPEN_SCHEDULE_COLUMN = "OPEN_SCHEDULE";
     public static final String CLOSE_SCHEDULE_COLUMN = "CLOSE_SCHEDULE";
+    public static final String USER_COLUMN = "ID_USER";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,4 +72,8 @@ public class StudioEntity {
     @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<StudioImageEntity> images;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = USER_COLUMN, referencedColumnName = UserEntity.ID_USER_COLUMN)
+    private UserEntity user;
 }

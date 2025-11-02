@@ -1,6 +1,8 @@
 package com.almozara.tattooart_connect.security.domain;
 
+import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.util.enums.RoleEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,6 +46,10 @@ public class UserEntity {
 
     @Column(name = DESCRIPTION_COLUMN)
     private String description;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<StudioEntity> studios;
 
     // Colección de roles, se crea una tabla de roles para gestionarlo
     @ElementCollection(targetClass = RoleEnum.class, fetch = FetchType.EAGER)

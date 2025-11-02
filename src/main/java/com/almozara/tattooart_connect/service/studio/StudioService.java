@@ -13,4 +13,5 @@ public interface StudioService {
     void delete (Long idStudio);
     List<StudioDto> findByName(String name);
     List<StudioDto> findByIdsStudios(List<Long> idsStudios);
+    List<StudioDto> findByUser(Long idUser);
 }

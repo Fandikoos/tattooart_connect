@@ -2,6 +2,7 @@ package com.almozara.tattooart_connect.service.studio;
 
 import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.dto.StudioDto;
+import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.repository.StudioRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,8 +30,7 @@ public class StudioServiceImpl implements StudioService{
     @Override
     public StudioDto findById(Long idStudio) {
         StudioEntity studioEntity = studioRepository.findById(idStudio)
-                .orElseThrow(() -> new RuntimeException("Studio not found"));
-
+                .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));
         return studioMapper.transferToDto(studioEntity);
     }
 
@@ -38,20 +38,18 @@ public class StudioServiceImpl implements StudioService{
     @Override
     public void update(Long idStudio, StudioDto studioDto) {
         StudioEntity existingStudioEntity = studioRepository.findById(idStudio)
-                .orElseThrow(() -> new RuntimeException("Studio not found"));
+                .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));
 
-        if (existingStudioEntity != null){
-            existingStudioEntity.setAddress(studioDto.getAddress());
-            existingStudioEntity.setLogo(studioDto.getLogo());
-            existingStudioEntity.setLatitud(studioDto.getLatitud());
-            existingStudioEntity.setLongitud(studioDto.getLongitud());
-            existingStudioEntity.setName(studioDto.getName());
-            existingStudioEntity.setRating(studioDto.getRating());
-            existingStudioEntity.setDescription(studioDto.getDescription());
-            existingStudioEntity.setOpenSchedule(studioDto.getOpenSchedule());
-            existingStudioEntity.setCloseSchedule(studioDto.getCloseSchedule());
-            studioRepository.save(existingStudioEntity);
-        }
+        existingStudioEntity.setAddress(studioDto.getAddress());
+        existingStudioEntity.setLogo(studioDto.getLogo());
+        existingStudioEntity.setLatitud(studioDto.getLatitud());
+        existingStudioEntity.setLongitud(studioDto.getLongitud());
+        existingStudioEntity.setName(studioDto.getName());
+        existingStudioEntity.setRating(studioDto.getRating());
+        existingStudioEntity.setDescription(studioDto.getDescription());
+        existingStudioEntity.setOpenSchedule(studioDto.getOpenSchedule());
+        existingStudioEntity.setCloseSchedule(studioDto.getCloseSchedule());
+        studioRepository.save(existingStudioEntity);
     }
 
     @Override
@@ -64,10 +62,8 @@ public class StudioServiceImpl implements StudioService{
     @Override
     public void delete(Long idStudio) {
         StudioEntity studioEntity = studioRepository.findById(idStudio)
-                .orElseThrow(() -> new RuntimeException("Studio not found"));
-        if (studioEntity != null){
-            studioRepository.delete(studioEntity);
-        }
+                .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));
+        studioRepository.delete(studioEntity);
     }
 
     @Override
@@ -84,6 +80,15 @@ public class StudioServiceImpl implements StudioService{
         List<StudioEntity> studioEntitiesByIds = studioRepository.findByidStudioIn(idsStudios);
         if (studioEntitiesByIds != null && !studioEntitiesByIds.isEmpty()){
             return studioMapper.transferToDtoList(studioEntitiesByIds);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<StudioDto> findByUser(Long idUser) {
+        List<StudioEntity> studioEntitiesByUser = studioRepository.findByUser_IdUser(idUser);
+        if (studioEntitiesByUser != null && !studioEntitiesByUser.isEmpty()){
+            return studioMapper.transferToDtoList(studioEntitiesByUser);
         }
         return new ArrayList<>();
     }
