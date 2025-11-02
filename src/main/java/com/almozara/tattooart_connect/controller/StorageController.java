@@ -1,5 +1,6 @@
 package com.almozara.tattooart_connect.controller;
 
+import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.service.storage.StorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -13,10 +14,10 @@ import java.nio.file.Files;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = StorageController.URL_API)
+@RequestMapping(ApiConfig.API_BASE_PATH + StorageController.URL_API)
 public class StorageController {
 
-    public static final String URL_API = "/tattoo/media";
+    public static final String URL_API = "/media";
 
     private final StorageService storageService;
 

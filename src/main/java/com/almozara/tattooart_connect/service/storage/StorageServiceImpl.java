@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class StorageServiceImpl implements StorageService{
@@ -22,6 +24,7 @@ public class StorageServiceImpl implements StorageService{
     private String mediaLocation;
 
     private Path rootLocation;
+    private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of("image/jpeg", "image/png", "image/webp");
 
     @Override
     @PostConstruct
@@ -37,13 +40,22 @@ public class StorageServiceImpl implements StorageService{
             if (file.isEmpty()){
                 throw new RuntimeException("Failed to store empty file");
             }
-            String filename = file.getOriginalFilename();
-            Path destinationFile = rootLocation.resolve(Paths.get(filename))
-                    .normalize().toAbsolutePath();
-            try(InputStream inputStream = file.getInputStream()){
-                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+
+            String contentType = file.getContentType();
+            if (!ALLOWED_CONTENT_TYPES.contains(contentType)) {
+                throw new RuntimeException("Only allow imágenes JPEG, PNG o WEBP.");
             }
-            return filename;
+
+            // Generar nombre único para el archivo
+            String originalFilename = file.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String newFilename = UUID.randomUUID() + extension;
+
+            // Guardar en el sistema de archivos
+            Path destination = rootLocation.resolve(newFilename).normalize();
+            Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+
+            return newFilename;
         } catch (IOException e){
             throw new RuntimeException("Failed to store file.", e);
         }
