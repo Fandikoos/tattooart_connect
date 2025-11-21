@@ -1,7 +1,9 @@
 package com.almozara.tattooart_connect.global;
 
 import com.almozara.tattooart_connect.global.dto.MessageDto;
+import com.almozara.tattooart_connect.global.exceptions.ExistingIdException;
 import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
+import com.almozara.tattooart_connect.global.exceptions.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,13 +22,13 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<MessageDto> badCredentialsException(BadCredentialsException e){
+    public ResponseEntity<MessageDto> badCredentialsException(BadCredentialsException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new MessageDto(HttpStatus.NOT_FOUND, "Bad credentials"));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<MessageDto> accessDeniedException(AccessDeniedException e){
+    public ResponseEntity<MessageDto> accessDeniedException(AccessDeniedException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new MessageDto(HttpStatus.FORBIDDEN, "cannot access this resource"));
     }
@@ -40,7 +42,7 @@ public class GlobalExceptionHandler {
     //            "path": "/api/studios/99"
     //    }
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<MessageDto> handleNotFoundException(NotFoundException e, WebRequest request){
+    public ResponseEntity<MessageDto> handleNotFoundException(NotFoundException e, WebRequest request) {
         log.warn("Not found Exception: {}", e.getMessage());
         MessageDto apiError = new MessageDto(
                 LocalDateTime.now(),
@@ -49,6 +51,30 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+    }
+
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<MessageDto> handleUserException(UserException e, WebRequest request) {
+        log.warn("User Exception: {}", e.getMessage());
+        MessageDto apiError = new MessageDto(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST,
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                e.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+    }
+
+    @ExceptionHandler(ExistingIdException.class)
+    public ResponseEntity<MessageDto> handleExistingIdException(ExistingIdException e, WebRequest request) {
+        log.warn("Existing Id Exception: {}", e.getMessage());
+        MessageDto apiError = new MessageDto(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST,
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                e.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 
     @ExceptionHandler(Exception.class)

@@ -2,21 +2,20 @@ package com.almozara.tattooart_connect.service.studio;
 
 import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.dto.StudioDto;
+import com.almozara.tattooart_connect.global.exceptions.ExistingIdException;
 import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
+import com.almozara.tattooart_connect.global.exceptions.UserException;
 import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.repository.StudioRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class StudioServiceImpl implements StudioService{
+public class StudioServiceImpl implements StudioService {
 
     private final StudioMapper studioMapper;
     private final StudioRepository studioRepository;
@@ -54,6 +53,13 @@ public class StudioServiceImpl implements StudioService{
 
     @Override
     public StudioDto create(StudioDto studioDto) {
+        if (studioDto.getIdUser() == null) {
+            throw new UserException("It is necessary user id, actually is null");
+        }
+        if (studioDto.getIdStudio() != null) {
+            throw new ExistingIdException("Error to create because studio has an id");
+        }
+        studioDto.setRating(0);
         StudioEntity studioEntity = studioMapper.transferToEntity(studioDto);
         studioRepository.save(studioEntity);
         return studioMapper.transferToDto(studioEntity);
@@ -69,7 +75,7 @@ public class StudioServiceImpl implements StudioService{
     @Override
     public List<StudioDto> findByName(String name) {
         List<StudioEntity> studioEntitiesByName = studioRepository.findByNameContainingIgnoreCase(name);
-        if (studioEntitiesByName != null && !studioEntitiesByName.isEmpty()){
+        if (studioEntitiesByName != null && !studioEntitiesByName.isEmpty()) {
             return studioMapper.transferToDtoList(studioEntitiesByName);
         }
         return new ArrayList<>();
@@ -78,7 +84,7 @@ public class StudioServiceImpl implements StudioService{
     @Override
     public List<StudioDto> findByIdsStudios(List<Long> idsStudios) {
         List<StudioEntity> studioEntitiesByIds = studioRepository.findByidStudioIn(idsStudios);
-        if (studioEntitiesByIds != null && !studioEntitiesByIds.isEmpty()){
+        if (studioEntitiesByIds != null && !studioEntitiesByIds.isEmpty()) {
             return studioMapper.transferToDtoList(studioEntitiesByIds);
         }
         return new ArrayList<>();
@@ -87,7 +93,7 @@ public class StudioServiceImpl implements StudioService{
     @Override
     public List<StudioDto> findByUser(Long idUser) {
         List<StudioEntity> studioEntitiesByUser = studioRepository.findByUser_IdUser(idUser);
-        if (studioEntitiesByUser != null && !studioEntitiesByUser.isEmpty()){
+        if (studioEntitiesByUser != null && !studioEntitiesByUser.isEmpty()) {
             return studioMapper.transferToDtoList(studioEntitiesByUser);
         }
         return new ArrayList<>();

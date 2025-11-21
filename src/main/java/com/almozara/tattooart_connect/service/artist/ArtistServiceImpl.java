@@ -5,16 +5,14 @@ import com.almozara.tattooart_connect.dto.ArtistDto;
 import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.mapper.ArtistMapper;
 import com.almozara.tattooart_connect.repository.ArtistRepository;
-import com.almozara.tattooart_connect.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ArtistServiceImpl implements ArtistService{
+public class ArtistServiceImpl implements ArtistService {
 
     private final ArtistMapper artistMapper;
     private final ArtistRepository artistRepository;
@@ -65,7 +63,7 @@ public class ArtistServiceImpl implements ArtistService{
         existingArtistEntity.setSecondSurname(artistDto.getSecondSurname());
         existingArtistEntity.getTattooStudio().setIdStudio(artistDto.getIdTattooStudio());
         artistRepository.save(existingArtistEntity);
-}
+    }
 
     @Override
     public void delete(Long idArtist) {

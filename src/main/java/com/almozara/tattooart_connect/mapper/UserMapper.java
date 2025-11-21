@@ -16,6 +16,5 @@ public interface UserMapper {
 
     CreateUserDto transferToCreateUserDto(UserEntity userEntity);
     UserEntity transferCreateUserDtoToEntity(CreateUserDto createUserDto);
-    List<StudioDto> transferToDtoList(List<StudioEntity> studioEntities);
     ProfileUserDto transferProfileUserDto(UserEntity userEntity);
 }
