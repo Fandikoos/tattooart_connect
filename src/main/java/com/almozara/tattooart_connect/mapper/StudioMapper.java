@@ -13,7 +13,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {
         ArtistMapper.class,
-        StudioImageMapper.class
 })
 public abstract class StudioMapper {
 
@@ -26,7 +25,7 @@ public abstract class StudioMapper {
 
     // Conversión idUserDto -> userEntity
     // MapStruct sabe que en algun momento se va a recibir un long perteneciente al idUser que lo tiene que mapear a entidad, entocnes buscara en este metodo
-    // da igual como se llame, lo importante es el parametro que recibe y lo que devuelve, mapstrcut se encarga del resto:
+    // da igual como se llame, lo importante es el parametro que recibe y lo que devuelve, mapstrcut se encarga del resto, ejemplo de eliminar un esdtuio desde angular
     protected UserEntity mapIdToUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));

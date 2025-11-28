@@ -1,80 +1,85 @@
 package com.almozara.tattooart_connect.service.storage;
 
+import com.almozara.tattooart_connect.global.exceptions.StorageException;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
-public class StorageServiceImpl implements StorageService{
+@RequiredArgsConstructor
+public class StorageServiceImpl implements StorageService {
 
-    @Value("${media.location}")
-    private String mediaLocation;
-
-    private Path rootLocation;
-    private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of("image/jpeg", "image/png", "image/webp");
+    private final Path root = Paths.get("storage/studios");
 
     @Override
-    @PostConstruct
-    public void init() throws IOException {
-        rootLocation = Paths.get(mediaLocation);
-        Files.createDirectories(rootLocation);
+    public String save(MultipartFile file, Long idStudio) {
+        String originalFileName = file.getOriginalFilename();
+        // Extraer extension
+        String extension = getFileExtension(originalFileName);
+
+        String storedImageName = UUID.randomUUID() + extension;
+        try {
+            Path studioImageFolder = root.resolve(String.valueOf(idStudio)).resolve("images");
+            Files.createDirectories(studioImageFolder);
+            //Ruta final donde guardamos el archivo
+            Path destinationFile = studioImageFolder.resolve(storedImageName).normalize();
+            Files.copy(file.getInputStream(), destinationFile);
+        } catch (IOException e) {
+            throw new StorageException("Failed to store file " + storedImageName, e);
+        }
+
     }
 
-    // Metodo para almacenar un archivo
+    private String getFileExtension(String originalFileName) {
+        if (originalFileName == null || !originalFileName.contains(".")) {
+            throw new StorageException("Invalid file: no extension found");
+        }
+        return originalFileName.substring(originalFileName.lastIndexOf("."));
+    }
+
     @Override
-    public String store(MultipartFile file) {
+    public void delete(String storedImageName, Long idStudio) {
         try {
-            if (file.isEmpty()){
-                throw new RuntimeException("Failed to store empty file");
-            }
-
-            String contentType = file.getContentType();
-            if (!ALLOWED_CONTENT_TYPES.contains(contentType)) {
-                throw new RuntimeException("Only allow imágenes JPEG, PNG o WEBP.");
-            }
-
-            // Generar nombre único para el archivo
-            String originalFilename = file.getOriginalFilename();
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String newFilename = UUID.randomUUID() + extension;
-
-            // Guardar en el sistema de archivos
-            Path destination = rootLocation.resolve(newFilename).normalize();
-            Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
-
-            return newFilename;
-        } catch (IOException e){
-            throw new RuntimeException("Failed to store file.", e);
+            Path filePath = root.resolve(String.valueOf(idStudio)).resolve("images").resolve(storedImageName);
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new StorageException("Could not delete file " + storedImageName, e);
         }
     }
 
-    // Recuperar archivo a partir del nombre
     @Override
-    public Resource loadAsResource(String filename) {
+    public Resource load(String storedImageName, Long idStudo) {
         try {
-            Path file = rootLocation.resolve(filename);
-            Resource resource = new UrlResource(file.toUri());
+            Path filePath = root.resolve(String.valueOf(idStudo)).resolve("images").resolve(storedImageName);
+            Resource resource = new UrlResource(filePath.toUri());
 
-            if (resource.exists() || resource.isReadable()){
+            if (resource.exists() && resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("Could not read file: " + filename);
+                throw new StorageException("Could not read file: " + storedImageName);
             }
-        } catch (MalformedURLException e){
-            throw new RuntimeException("Could not read file: " + filename);
+
+        } catch (MalformedURLException e) {
+            throw new StorageException("Could not load file: " + storedImageName, e);
+        }
+    }
+
+    @PostConstruct
+    public void init() {
+        try {
+            Files.createDirectories(root);
+        } catch (IOException e) {
+            throw new StorageException("Could not initialize storage directory", e);
         }
     }
 }

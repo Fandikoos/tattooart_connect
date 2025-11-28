@@ -2,13 +2,11 @@ package com.almozara.tattooart_connect.domain;
 
 import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -69,9 +67,9 @@ public class StudioEntity {
     @JsonIgnore
     private List<ArtistEntity> artists;
 
-    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<StudioImageEntity> images;
+    private List<ImageEntity> imagesGallery;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_COLUMN, referencedColumnName = UserEntity.ID_USER_COLUMN)

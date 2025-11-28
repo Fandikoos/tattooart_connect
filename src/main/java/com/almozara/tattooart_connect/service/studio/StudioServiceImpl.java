@@ -7,6 +7,7 @@ import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.global.exceptions.UserException;
 import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.repository.StudioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,9 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
-    public StudioDto findById(Long idStudio) {
+    public StudioDto findById(Long idStudio) throws NotFoundException {
         StudioEntity studioEntity = studioRepository.findById(idStudio)
-                .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Studio with id " + idStudio + " not found"));
         return studioMapper.transferToDto(studioEntity);
     }
 
@@ -37,7 +38,7 @@ public class StudioServiceImpl implements StudioService {
     @Override
     public void update(Long idStudio, StudioDto studioDto) {
         StudioEntity existingStudioEntity = studioRepository.findById(idStudio)
-                .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Studio with id " + idStudio + " not found"));
 
         existingStudioEntity.setAddress(studioDto.getAddress());
         existingStudioEntity.setLogo(studioDto.getLogo());
@@ -68,7 +69,7 @@ public class StudioServiceImpl implements StudioService {
     @Override
     public void delete(Long idStudio) {
         StudioEntity studioEntity = studioRepository.findById(idStudio)
-                .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Studio with id " + idStudio + " not found"));
         studioRepository.delete(studioEntity);
     }
 
