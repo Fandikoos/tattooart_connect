@@ -5,13 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = StudioEntity.TABLE_NAME)
+@Table(name = ImageEntity.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImageEntity {
@@ -42,7 +43,8 @@ public class ImageEntity {
     @CreationTimestamp
     private LocalDateTime uploadedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = TATTOO_STUDIO_COLUMN, referencedColumnName = StudioEntity.ID_STUDIO_COLUMN)
+    @ToString.Exclude
     private StudioEntity tattooStudio;
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -73,5 +74,6 @@ public class StudioEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_COLUMN, referencedColumnName = UserEntity.ID_USER_COLUMN)
+    @ToString.Exclude
     private UserEntity user;
 }

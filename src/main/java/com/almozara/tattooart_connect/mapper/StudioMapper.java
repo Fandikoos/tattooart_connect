@@ -13,6 +13,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {
         ArtistMapper.class,
+        ImageMapper.class,
 })
 public abstract class StudioMapper {
 

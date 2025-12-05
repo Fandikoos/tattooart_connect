@@ -1,12 +1,10 @@
 package com.almozara.tattooart_connect.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -57,5 +55,6 @@ public class ArtistEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = TATTOO_STUDIO_COLUMN, referencedColumnName = StudioEntity.ID_STUDIO_COLUMN)
+    @ToString.Exclude
     private StudioEntity tattooStudio;
 }

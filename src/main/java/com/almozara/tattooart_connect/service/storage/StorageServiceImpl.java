@@ -34,10 +34,10 @@ public class StorageServiceImpl implements StorageService {
             //Ruta final donde guardamos el archivo
             Path destinationFile = studioImageFolder.resolve(storedImageName).normalize();
             Files.copy(file.getInputStream(), destinationFile);
+            return storedImageName;
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + storedImageName, e);
         }
-
     }
 
     private String getFileExtension(String originalFileName) {

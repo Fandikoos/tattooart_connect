@@ -16,8 +16,6 @@ public class ImageDto {
     private Long idImage;
     @NotNull(message = "Name of image can't be null")
     private String storedName;
-    @NotNull(message = "Orignal name can't be null")
-    private String originalName;
     private String url;
     private LocalDateTime uploadedAt;
     private Long idStudio;

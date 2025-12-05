@@ -1,10 +1,10 @@
 package com.almozara.tattooart_connect.service.image;
 
+import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.domain.ImageEntity;
 import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.dto.ImageDto;
 import com.almozara.tattooart_connect.dto.StudioDto;
-import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.mapper.ImageMapper;
 import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.repository.ImageRepository;
@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,14 +40,15 @@ public class ImageServiceImpl implements ImageService {
 
         String storedImageName = storageService.save(file, idStudio);
 
+        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         ImageEntity image = new ImageEntity();
         image.setOriginalName(file.getOriginalFilename());
         image.setStoredName(storedImageName);
-        image.setUrl("/studios/" + idStudio + "/images/" + storedImageName);
+        image.setUrl(baseUrl + ApiConfig.API_BASE_PATH + "/studios/" + idStudio + "/images/" + storedImageName);
         image.setUploadedAt(LocalDateTime.now());
         image.setTattooStudio(studioEntity);
 
-        ImageEntity savedImageEntity = imageRepository.save(image):
+        ImageEntity savedImageEntity = imageRepository.save(image);
         return imageMapper.transferToDto(savedImageEntity);
     }
 
