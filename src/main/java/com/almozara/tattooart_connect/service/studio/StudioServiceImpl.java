@@ -7,7 +7,6 @@ import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.global.exceptions.UserException;
 import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.repository.StudioRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
