@@ -2,9 +2,9 @@ package com.almozara.tattooart_connect.service.artist;
 
 import com.almozara.tattooart_connect.domain.ArtistEntity;
 import com.almozara.tattooart_connect.dto.ArtistDto;
+import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.mapper.ArtistMapper;
 import com.almozara.tattooart_connect.repository.ArtistRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,14 +45,14 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public ArtistDto findById(Long idArtist) {
         ArtistEntity artistEntity = artistRepository.findById(idArtist)
-                .orElseThrow(() -> new EntityNotFoundException("Artist with " + idArtist + " not exist"));
+                .orElseThrow(() -> new NotFoundException("Artist with " + idArtist + " not exist"));
         return artistMapper.transferToDto(artistEntity);
     }
 
     @Override
     public void update(Long idArtist, ArtistDto artistDto) {
         ArtistEntity existingArtistEntity = artistRepository.findById(idArtist)
-                .orElseThrow(() -> new EntityNotFoundException("Artist with " + idArtist + " not exist"));
+                .orElseThrow(() -> new NotFoundException("Artist with " + idArtist + " not exist"));
 
         existingArtistEntity.setImageArtist(artistDto.getImageArtist());
         existingArtistEntity.setDni(artistDto.getDni());
@@ -68,7 +68,7 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public void delete(Long idArtist) {
         ArtistEntity artistEntity = artistRepository.findById(idArtist)
-                .orElseThrow(() -> new EntityNotFoundException("Artist with " + idArtist + " not exist"));
+                .orElseThrow(() -> new NotFoundException("Artist with " + idArtist + " not exist"));
         artistRepository.delete(artistEntity);
     }
 }

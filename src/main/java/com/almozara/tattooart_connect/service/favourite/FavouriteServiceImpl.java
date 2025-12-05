@@ -3,12 +3,12 @@ package com.almozara.tattooart_connect.service.favourite;
 import com.almozara.tattooart_connect.domain.FavouriteEntity;
 import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.dto.FavouriteDto;
+import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.mapper.FavouriteMapper;
 import com.almozara.tattooart_connect.repository.FavouriteRepository;
 import com.almozara.tattooart_connect.repository.StudioRepository;
 import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.almozara.tattooart_connect.security.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,13 +36,13 @@ public class FavouriteServiceImpl implements FavouriteService {
         Long idUser = favouriteDto.getIdUser();
         if (idUser != null) {
             UserEntity user = userRepository.findById(idUser)
-                    .orElseThrow(() -> new EntityNotFoundException("User with " + idUser + " not exist"));
+                    .orElseThrow(() -> new NotFoundException("User with " + idUser + " not exist"));
             favouriteEntity.setUserEntity(user);
         }
         Long idStudio = favouriteDto.getIdStudio();
         if (idStudio != null) {
             StudioEntity studio = studioRepository.findById(idStudio)
-                    .orElseThrow(() -> new EntityNotFoundException("Studio with " + idStudio + " not exist"));
+                    .orElseThrow(() -> new NotFoundException("Studio with " + idStudio + " not exist"));
             favouriteEntity.setStudioEntity(studio);
         }
 
@@ -54,7 +54,7 @@ public class FavouriteServiceImpl implements FavouriteService {
     @Override
     public void deleteFavourite(Long idFavourite) {
         FavouriteEntity favouriteEntity = favouriteRepository.findById(idFavourite)
-                .orElseThrow(() -> new EntityNotFoundException("Favourite Entity with " + idFavourite + " not exist"));
+                .orElseThrow(() -> new NotFoundException("Favourite Entity with " + idFavourite + " not exist"));
         favouriteRepository.delete(favouriteEntity);
 
     }
