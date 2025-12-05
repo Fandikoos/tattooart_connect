@@ -27,7 +27,7 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
-    public StudioDto findById(Long idStudio) {
+    public StudioDto findById(Long idStudio) throws NotFoundException {
         StudioEntity studioEntity = studioRepository.findById(idStudio)
                 .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));
         return studioMapper.transferToDto(studioEntity);

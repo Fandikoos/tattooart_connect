@@ -1,6 +1,5 @@
 package com.almozara.tattooart_connect.service.favourite;
 
-import com.almozara.tattooart_connect.domain.ArtistEntity;
 import com.almozara.tattooart_connect.domain.FavouriteEntity;
 import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.dto.FavouriteDto;
@@ -11,7 +10,6 @@ import com.almozara.tattooart_connect.repository.StudioRepository;
 import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.almozara.tattooart_connect.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,15 +34,15 @@ public class FavouriteServiceImpl implements FavouriteService {
     public FavouriteDto addFavourite(FavouriteDto favouriteDto) {
         FavouriteEntity favouriteEntity = favouriteMapper.transferToEntity(favouriteDto);
         Long idUser = favouriteDto.getIdUser();
-        if(idUser != null){
+        if (idUser != null) {
             UserEntity user = userRepository.findById(idUser)
                     .orElseThrow(() -> new NotFoundException("User with " + idUser + " not exist"));
             favouriteEntity.setUserEntity(user);
         }
         Long idStudio = favouriteDto.getIdStudio();
-        if(idStudio != null){
+        if (idStudio != null) {
             StudioEntity studio = studioRepository.findById(idStudio)
-                    .orElseThrow(() ->  new NotFoundException("Studio with " + idStudio + " not exist"));
+                    .orElseThrow(() -> new NotFoundException("Studio with " + idStudio + " not exist"));
             favouriteEntity.setStudioEntity(studio);
         }
 
@@ -64,7 +62,7 @@ public class FavouriteServiceImpl implements FavouriteService {
     @Override
     public List<FavouriteDto> findByIdUser(Long idUser) {
         List<FavouriteEntity> favouriteEntitiesByIdUser = favouriteRepository.findByUserEntityIdUser(idUser);
-        if (favouriteEntitiesByIdUser.isEmpty()){
+        if (favouriteEntitiesByIdUser.isEmpty()) {
             return new ArrayList<>();
         }
         return favouriteMapper.transferToDtoList(favouriteEntitiesByIdUser);

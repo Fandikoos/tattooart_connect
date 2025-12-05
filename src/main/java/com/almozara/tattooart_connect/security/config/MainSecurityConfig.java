@@ -3,6 +3,7 @@ package com.almozara.tattooart_connect.security.config;
 import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.controller.ArtistController;
 import com.almozara.tattooart_connect.controller.FavouriteController;
+import com.almozara.tattooart_connect.controller.ImageController;
 import com.almozara.tattooart_connect.controller.StudioController;
 import com.almozara.tattooart_connect.security.controller.AuthController;
 import com.almozara.tattooart_connect.security.jwt.JwtEntryPoint;
@@ -12,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -57,19 +56,20 @@ public class MainSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // Nueva forma de deshabilitar CSRF
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Habilitar Cors con mi configuración
                 .authorizeHttpRequests(auth -> auth
-                        // TODO Agrupar rutias públicas en una clase Utils
-                        // Rutas públicas que no requieren de Token
+                                // TODO Agrupar rutias públicas en una clase Utils
+                                // Rutas públicas que no requieren de Token
                                 .requestMatchers(ApiConfig.API_BASE_PATH + AuthController.URL + "/**").permitAll()
                                 .requestMatchers(ApiConfig.API_BASE_PATH + ArtistController.URL + "/**").permitAll()
                                 .requestMatchers(ApiConfig.API_BASE_PATH + StudioController.URL + "/**").permitAll()
                                 .requestMatchers(ApiConfig.API_BASE_PATH + FavouriteController.URL + "/**").permitAll()
+                                .requestMatchers(ApiConfig.API_BASE_PATH + ImageController.URL + "/**").permitAll()
 
                                 // Rutas privadas que si que requieren token
 //                                .requestMatchers(ApiConfig.API_BASE_PATH + FavouriteController.URL + "/favourite/**").authenticated()
 //                         .requestMatchers(ApiConfig.API_BASE_PATH + StudioController.URL + "/protected/**").authenticated() // Ejemplo futuro
-                        // .requestMatchers(ApiConfig.API_BASE_PATH + "/appointments/**").authenticated() // Ejemplo futuro
+                                // .requestMatchers(ApiConfig.API_BASE_PATH + "/appointments/**").authenticated() // Ejemplo futuro
 
-                        .anyRequest().authenticated() // Por defecto pedir autenticación
+                                .anyRequest().authenticated() // Por defecto pedir autenticación
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtEntryPoint)  // Nueva forma de configurar manejo de excepciones

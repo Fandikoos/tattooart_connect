@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.yaml.snakeyaml.events.Event;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = FavouriteEntity.TABLE_NAME )
+@Table(name = FavouriteEntity.TABLE_NAME)
 public class FavouriteEntity {
 
     public static final String TABLE_NAME = "ET_FAVOURITE";
@@ -31,10 +31,12 @@ public class FavouriteEntity {
 
     @ManyToOne
     @JoinColumn(name = ID_USER_COLUMN, referencedColumnName = UserEntity.ID_USER_COLUMN)
+    @ToString.Exclude
     private UserEntity userEntity;
 
     @ManyToOne
     @JoinColumn(name = ID_STUDIO_COLUMN, referencedColumnName = StudioEntity.ID_STUDIO_COLUMN)
+    @ToString.Exclude
     private StudioEntity studioEntity;
 
     @Column(name = CREATED_AT_COLUMN)
