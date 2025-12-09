@@ -1,3 +1,4 @@
+# Archivo que evita mySQL en los tests de CI
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
@@ -7,6 +8,8 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    # Crea tablas al arrancar y las borra al terminar, create-drop, asi la db siempre esta limpia y no hay datos sucios entre
+    # ejecuciones de tests
     hibernate:
       ddl-auto: create-drop
     show-sql: false

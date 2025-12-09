@@ -10,6 +10,7 @@ import com.almozara.tattooart_connect.repository.StudioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class StudioServiceImpl implements StudioService {
         if (studioDto.getIdStudio() != null) {
             throw new ExistingIdException("Error to create because studio has an id");
         }
-        studioDto.setRating(0);
+        studioDto.setRating(new BigDecimal(0));
         StudioEntity studioEntity = studioMapper.transferToEntity(studioDto);
         studioRepository.save(studioEntity);
         return studioMapper.transferToDto(studioEntity);

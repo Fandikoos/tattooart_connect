@@ -5,6 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+// Configuración para lanzar los tests
 @ActiveProfiles("test")
 class TattooartConnectApplicationTests {
 

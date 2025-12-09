@@ -2,10 +2,7 @@ package com.almozara.tattooart_connect.domain;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -15,6 +12,10 @@ import java.time.LocalDateTime;
 @Table(name = ImageEntity.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ImageEntity {
 
     public static final String TABLE_NAME = "ET_GALLERY_STUDIO";
@@ -29,6 +30,7 @@ public class ImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID_IMAGE_COLUMN)
+    @EqualsAndHashCode.Include
     private Long idImage;
 
     @Column(name = STORED_NAME_COLUMN, nullable = false)
@@ -43,8 +45,7 @@ public class ImageEntity {
     @CreationTimestamp
     private LocalDateTime uploadedAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = TATTOO_STUDIO_COLUMN, referencedColumnName = StudioEntity.ID_STUDIO_COLUMN)
-    @ToString.Exclude
     private StudioEntity tattooStudio;
 }

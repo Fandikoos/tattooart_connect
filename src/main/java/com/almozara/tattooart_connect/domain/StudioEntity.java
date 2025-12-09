@@ -3,19 +3,20 @@ package com.almozara.tattooart_connect.domain;
 import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 
-@Data
 @Entity
 @Table(name = StudioEntity.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class StudioEntity {
 
     public static final String TABLE_NAME = "ET_STUDIO";
@@ -35,6 +36,7 @@ public class StudioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID_STUDIO_COLUMN)
+    @EqualsAndHashCode.Include
     private Long idStudio;
 
     @Column(name = NAME_COLUMN)
@@ -44,13 +46,13 @@ public class StudioEntity {
     private String address;
 
     @Column(name = LATITUD_COLUMN)
-    private float latitud;
+    private Double latitud;
 
     @Column(name = LONGITUD_COLUMN)
-    private float longitud;
+    private Double longitud;
 
     @Column(name = RATING_COLUMN)
-    private int rating;
+    private BigDecimal rating;
 
     @Column(name = DESCRIPTION_COLUMN)
     private String description;
@@ -64,16 +66,19 @@ public class StudioEntity {
     @Column(name = LOGO_COLUMN)
     private String logo;
 
-    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<ArtistEntity> artists;
 
-    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<ImageEntity> imagesGallery;
 
+    @OneToMany(mappedBy = "tattooStudio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<ReviewEntity> reviews;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_COLUMN, referencedColumnName = UserEntity.ID_USER_COLUMN)
-    @ToString.Exclude
     private UserEntity user;
 }

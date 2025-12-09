@@ -1,16 +1,16 @@
 package com.almozara.tattooart_connect.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-@Data
 @Entity
 @Table(name = ArtistEntity.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ArtistEntity {
 
     // Nombre tabla
@@ -30,6 +30,7 @@ public class ArtistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID_ARTIST_COLUMN)
+    @EqualsAndHashCode.Include
     private Long idArtist;
 
     @Column(name = ArtistEntity.NAME_COLUMN, nullable = false)
@@ -55,6 +56,5 @@ public class ArtistEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = TATTOO_STUDIO_COLUMN, referencedColumnName = StudioEntity.ID_STUDIO_COLUMN)
-    @ToString.Exclude
     private StudioEntity tattooStudio;
 }
