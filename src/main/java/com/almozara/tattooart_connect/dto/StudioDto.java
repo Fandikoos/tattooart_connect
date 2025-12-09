@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -21,11 +22,11 @@ public class StudioDto {
     private String name;
     @NotBlank(message = "Address can not be empty")
     private String address;
-    private float latitud;
-    private float longitud;
+    private Double latitud;
+    private Double longitud;
     @Min(value = 0, message = "Rating has to be more than 0")
     @Max(value = 5, message = "Rating has to be less than 5")
-    private int rating;
+    private BigDecimal rating;
     private String description;
     private String logo;
     @NotNull(message = "Open schedule is required")
@@ -34,5 +35,6 @@ public class StudioDto {
     private LocalTime closeSchedule;
     private List<ArtistDto> artists;
     private List<ImageDto> imagesGallery;
+    private List<ReviewDto> reviews;
     private Long idUser;
 }

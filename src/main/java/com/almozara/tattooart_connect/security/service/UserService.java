@@ -10,7 +10,6 @@ import com.almozara.tattooart_connect.security.jwt.JwtProvider;
 import com.almozara.tattooart_connect.security.repository.UserRepository;
 import com.almozara.tattooart_connect.util.enums.RoleEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,11 +30,11 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
 
-    public CreateUserDto create(CreateUserDto userDto){
-        if (userRepository.existsByUsername(userDto.getUsername())){
+    public CreateUserDto create(CreateUserDto userDto) {
+        if (userRepository.existsByUsername(userDto.getUsername())) {
             throw new RuntimeException("Username already in use");
         }
-        if (userRepository.existsByEmail(userDto.getEmail())){
+        if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new RuntimeException("Email already in use");
         }
 
@@ -51,11 +50,11 @@ public class UserService {
 
     }
 
-    public CreateUserDto createAdmin(CreateUserDto userDto){
-        if (userRepository.existsByUsername(userDto.getUsername())){
+    public CreateUserDto createAdmin(CreateUserDto userDto) {
+        if (userRepository.existsByUsername(userDto.getUsername())) {
             throw new RuntimeException("Username already in use");
         }
-        if (userRepository.existsByEmail(userDto.getEmail())){
+        if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new RuntimeException("Email already in use");
         }
 
@@ -69,11 +68,11 @@ public class UserService {
         return userMapper.transferToCreateUserDto(savedUser);
     }
 
-    public CreateUserDto createUser(CreateUserDto userDto){
-        if (userRepository.existsByUsername(userDto.getUsername())){
+    public CreateUserDto createUser(CreateUserDto userDto) {
+        if (userRepository.existsByUsername(userDto.getUsername())) {
             throw new RuntimeException("Username already in use");
         }
-        if (userRepository.existsByEmail(userDto.getEmail())){
+        if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new RuntimeException("Email already in use");
         }
 
@@ -87,7 +86,7 @@ public class UserService {
         return userMapper.transferToCreateUserDto(savedUser);
     }
 
-    public JwtTokenDto login(LoginUserDto dto){
+    public JwtTokenDto login(LoginUserDto dto) {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -96,5 +95,9 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         ProfileUserDto userDto = userMapper.transferProfileUserDto(user);
         return new JwtTokenDto(token, userDto);
+    }
+
+    public String findUsernameByIdUser(Long idUser) {
+        return userRepository.findUsernameByIdUser(idUser);
     }
 }
