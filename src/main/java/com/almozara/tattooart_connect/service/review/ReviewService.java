@@ -2,6 +2,7 @@ package com.almozara.tattooart_connect.service.review;
 
 import com.almozara.tattooart_connect.dto.ReviewDto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ReviewService {
@@ -14,4 +15,6 @@ public interface ReviewService {
     List<ReviewDto> getAll();
 
     List<ReviewDto> getByStudio(Long idStudio);
+
+    BigDecimal calculateAverageRatingByIdStudio(Long idStudio);
 }

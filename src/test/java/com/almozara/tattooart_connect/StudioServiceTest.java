@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class StudioManagerTest {
+public class StudioServiceTest {
 
     // Los mocks son objetos falsos
     @Mock
@@ -69,9 +69,7 @@ public class StudioManagerTest {
     void testUpdate() {
         UserEntity user = new UserEntity(1L, "USER_TEST-001", "USER@GMAIL.COM", "PASSWORD_TEST", 654876543, "DESCRIPTION_TEST-001", new ArrayList<>(), Collections.singletonList(RoleEnum.ROLE_ADMIN));
         StudioDto updateStudioDto = createStudioDto(1L, "Prueba Estudio 1", "Avenida Inventada, 1", new BigDecimal(3), 1L);
-        ;
         StudioEntity existingStudioEntity = createStudioEntity(1L, "Prueba Estudio 1", "Avenida Inventada, 1", new BigDecimal(3), user);
-        ;
         StudioEntity updatedStudioEntity = createStudioEntity(1L, "Prueba Estudio 1", "Avenida Inventada, 1", new BigDecimal(3), user);
 
         when(studioRepository.findById(existingStudioEntity.getIdStudio())).thenReturn(Optional.of(existingStudioEntity));
