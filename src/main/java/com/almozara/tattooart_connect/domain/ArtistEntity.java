@@ -49,7 +49,7 @@ public class ArtistEntity {
     private String dni;
 
     @Column(name = ArtistEntity.PHONE_COLUMN)
-    private String phone;
+    private int phone;
 
     @Column(name = IMAGE_ARTIST_COLUMN)
     private String imageArtist;

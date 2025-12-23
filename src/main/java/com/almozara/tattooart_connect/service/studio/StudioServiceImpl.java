@@ -9,6 +9,7 @@ import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.repository.StudioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class StudioServiceImpl implements StudioService {
 
 
     @Override
+    @Transactional
     public void update(Long idStudio, StudioDto studioDto) {
         StudioEntity existingStudioEntity = studioRepository.findById(idStudio)
                 .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));
@@ -53,6 +55,7 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
+    @Transactional
     public StudioDto create(StudioDto studioDto) {
         if (studioDto.getIdUser() == null) {
             throw new UserException("It is necessary user id, actually is null");
@@ -67,6 +70,7 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
+    @Transactional
     public void delete(Long idStudio) {
         StudioEntity studioEntity = studioRepository.findById(idStudio)
                 .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));
@@ -74,6 +78,7 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<StudioDto> findByName(String name) {
         List<StudioEntity> studioEntitiesByName = studioRepository.findByNameContainingIgnoreCase(name);
         if (studioEntitiesByName != null && !studioEntitiesByName.isEmpty()) {
@@ -83,6 +88,7 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<StudioDto> findByIdsStudios(List<Long> idsStudios) {
         List<StudioEntity> studioEntitiesByIds = studioRepository.findByidStudioIn(idsStudios);
         if (studioEntitiesByIds != null && !studioEntitiesByIds.isEmpty()) {
@@ -92,11 +98,18 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<StudioDto> findByUser(Long idUser) {
         List<StudioEntity> studioEntitiesByUser = studioRepository.findByUser_IdUser(idUser);
         if (studioEntitiesByUser != null && !studioEntitiesByUser.isEmpty()) {
             return studioMapper.transferToDtoList(studioEntitiesByUser);
         }
         return new ArrayList<>();
+    }
+
+    @Override
+    @Transactional
+    public void updateRating(Long idStudio, BigDecimal rating) {
+        studioRepository.updateRating(idStudio, rating);
     }
 }

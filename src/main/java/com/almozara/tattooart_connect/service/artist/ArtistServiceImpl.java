@@ -7,6 +7,7 @@ import com.almozara.tattooart_connect.mapper.ArtistMapper;
 import com.almozara.tattooart_connect.repository.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class ArtistServiceImpl implements ArtistService {
     private final ArtistRepository artistRepository;
 
     @Override
+    @Transactional
     public ArtistDto createArtist(ArtistDto artistDto) {
         // Convierte Dto -> Entidad
         ArtistEntity artistEntity = artistMapper.transferToEntity(artistDto);
@@ -37,6 +39,7 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ArtistDto> findByIdStudio(Long idTattooStudio) {
         List<ArtistEntity> artistEntity = artistRepository.findByTattooStudioIdStudio(idTattooStudio);
         return artistMapper.transferToDtoList(artistEntity);
@@ -50,6 +53,7 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
+    @Transactional
     public void update(Long idArtist, ArtistDto artistDto) {
         ArtistEntity existingArtistEntity = artistRepository.findById(idArtist)
                 .orElseThrow(() -> new NotFoundException("Artist with " + idArtist + " not exist"));
@@ -57,7 +61,7 @@ public class ArtistServiceImpl implements ArtistService {
         existingArtistEntity.setImageArtist(artistDto.getImageArtist());
         existingArtistEntity.setDni(artistDto.getDni());
         existingArtistEntity.setName(artistDto.getName());
-        existingArtistEntity.setPhone(String.valueOf(artistDto.getPhone()));
+        existingArtistEntity.setPhone(artistDto.getPhone());
         existingArtistEntity.setEmail(artistDto.getEmail());
         existingArtistEntity.setSurname(artistDto.getSurname());
         existingArtistEntity.setSecondSurname(artistDto.getSecondSurname());
@@ -66,6 +70,7 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
+    @Transactional
     public void delete(Long idArtist) {
         ArtistEntity artistEntity = artistRepository.findById(idArtist)
                 .orElseThrow(() -> new NotFoundException("Artist with " + idArtist + " not exist"));

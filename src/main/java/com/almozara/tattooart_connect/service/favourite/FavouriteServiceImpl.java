@@ -11,6 +11,7 @@ import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.almozara.tattooart_connect.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class FavouriteServiceImpl implements FavouriteService {
     }
 
     @Override
+    @Transactional
     public FavouriteDto addFavourite(FavouriteDto favouriteDto) {
         FavouriteEntity favouriteEntity = favouriteMapper.transferToEntity(favouriteDto);
         Long idUser = favouriteDto.getIdUser();
@@ -52,6 +54,7 @@ public class FavouriteServiceImpl implements FavouriteService {
     }
 
     @Override
+    @Transactional
     public void deleteFavourite(Long idFavourite) {
         FavouriteEntity favouriteEntity = favouriteRepository.findById(idFavourite)
                 .orElseThrow(() -> new NotFoundException("Favourite Entity with " + idFavourite + " not exist"));
@@ -60,6 +63,7 @@ public class FavouriteServiceImpl implements FavouriteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<FavouriteDto> findByIdUser(Long idUser) {
         List<FavouriteEntity> favouriteEntitiesByIdUser = favouriteRepository.findByUserEntityIdUser(idUser);
         if (favouriteEntitiesByIdUser.isEmpty()) {

@@ -2,7 +2,6 @@ package com.almozara.tattooart_connect.service.review;
 
 import com.almozara.tattooart_connect.domain.ReviewEntity;
 import com.almozara.tattooart_connect.dto.ReviewDto;
-import com.almozara.tattooart_connect.dto.StudioDto;
 import com.almozara.tattooart_connect.global.exceptions.ExistingIdException;
 import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.global.exceptions.UserException;
@@ -11,9 +10,9 @@ import com.almozara.tattooart_connect.repository.ReviewRepository;
 import com.almozara.tattooart_connect.service.studio.StudioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +26,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewMapper reviewMapper;
 
     @Override
+    @Transactional
     public ReviewDto create(ReviewDto review) {
         if (review.getIdReview() != null) {
             throw new ExistingIdException("Error to create because review has an id");
@@ -35,55 +35,65 @@ public class ReviewServiceImpl implements ReviewService {
             throw new UserException("It is necessary user id, actually is null");
         }
         review.setCreatedAt(LocalDateTime.now());
-        calculateAverateRatingStudio(review);
-        ReviewEntity reviewEntity = reviewMapper.transferToEntity(review);
-        return reviewMapper.transferToDto(reviewRepository.save(reviewEntity));
-    }
+        ReviewEntity entity = reviewMapper.transferToEntity(review);
+        ReviewEntity saved = reviewRepository.save(entity);
+        Long idStudio = saved.getTattooStudio().getIdStudio();
 
-    private void calculateAverateRatingStudio(ReviewDto review) {
-        StudioDto studioDto = studioService.findById(review.getIdTattooStudio());
-        if (studioDto != null) {
-            BigDecimal actualStudioRating = studioDto.getRating();
-            BigDecimal addRatingValue = actualStudioRating.add(review.getRating());
-            BigDecimal result;
-            if (!studioDto.getReviews().isEmpty()) {
-                result = addRatingValue.divide(BigDecimal.valueOf(studioDto.getReviews().size()), 2, RoundingMode.HALF_UP);
-            } else {
-                result = addRatingValue;
-            }
-            studioDto.setRating(result);
-            studioService.update(studioDto.getIdStudio(), studioDto);
-        }
+        BigDecimal averageRating = reviewRepository.calculateAverageRatingByStudio(idStudio);
+        studioService.updateRating(idStudio, averageRating);
+        return reviewMapper.transferToDto(saved);
     }
 
     @Override
+    @Transactional
     public void delete(Long idReview) {
         ReviewEntity reviewEntity = reviewRepository.findById(idReview)
                 .orElseThrow(() -> new NotFoundException("Review with id " + idReview + " not found"));
+        Long idStudio = reviewEntity.getTattooStudio().getIdStudio();
         reviewRepository.delete(reviewEntity);
+
+        BigDecimal averageRating = calculateAverageRatingByIdStudio(idStudio);
+        studioService.updateRating(idStudio, averageRating);
     }
 
+    /*
+     Se utiliza transactional en metodo donde llamamos a repositorios, se hacen operaciones que no sean selects,
+      si son selects es buena práctica utilizar el @Transactional(readOnly = true) si son selects complejos.
+      Se utiliza para que se completen las operaciones, o se hace todo o no se hace nada */
     @Override
+    @Transactional
     public void update(Long idReview, ReviewDto review) {
-        ReviewEntity existingReview = reviewRepository.findById(idReview)
-                .orElseThrow(() -> new NotFoundException("Review with id " + idReview + " not found"));
+        ReviewEntity reviewEntity = reviewRepository.findById(idReview)
+                .orElseThrow(() -> new NotFoundException("Review not found"));
 
-        existingReview.setRating(review.getRating());
-        existingReview.setReview(review.getReview());
-        reviewRepository.save(existingReview);
+        reviewEntity.setRating(review.getRating());
+        reviewEntity.setReview(review.getReview());
+        ReviewEntity updated = reviewRepository.save(reviewEntity);
+        Long idStudio = updated.getTattooStudio().getIdStudio();
+
+        BigDecimal avg = reviewRepository.calculateAverageRatingByStudio(idStudio);
+        studioService.updateRating(idStudio, avg);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ReviewDto> getAll() {
         return reviewMapper.transferToDtoList(reviewRepository.findAll());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ReviewDto> getByStudio(Long idStudio) {
         List<ReviewEntity> reviewsByStudio = reviewRepository.findByTattooStudioIdStudio(idStudio);
         if (reviewsByStudio != null) {
             return reviewMapper.transferToDtoList(reviewsByStudio);
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    @Transactional
+    public BigDecimal calculateAverageRatingByIdStudio(Long idStudio) {
+        return reviewRepository.calculateAverageRatingByStudio(idStudio);
     }
 }
