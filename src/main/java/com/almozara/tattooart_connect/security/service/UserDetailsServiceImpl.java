@@ -1,9 +1,9 @@
 package com.almozara.tattooart_connect.security.service;
 
+import com.almozara.tattooart_connect.global.exceptions.message.UserValidation;
 import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.almozara.tattooart_connect.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,8 +20,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UserEntity> userEntity = userRepository.findByUsernameOrEmail(username, username);
-        if (!userEntity.isPresent()){
-            throw new UsernameNotFoundException("Not exists");
+        if (userEntity.isEmpty()) {
+            throw new UsernameNotFoundException(UserValidation.EMAIL_OR_USERNAME_NOT_EXIST);
         }
         return UserPrincipal.builder(userEntity.get());
     }

@@ -4,18 +4,18 @@ import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.util.enums.RoleEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
-@Data
 @Entity
 @Table(name = UserEntity.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserEntity {
 
     public static final String TABLE_NAME = "ET_USER";
@@ -31,12 +31,13 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID_USER_COLUMN)
+    @EqualsAndHashCode.Include
     private Long idUser;
 
     @Column(name = USERNAME_COLUMN, unique = true)
     private String username;
 
-    @Column(name = EMAIL_COLUMN)
+    @Column(name = EMAIL_COLUMN, unique = true)
     private String email;
 
     @Column(name = PASSWORD_COLUMN)
