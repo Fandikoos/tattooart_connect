@@ -5,7 +5,6 @@ import com.almozara.tattooart_connect.dto.FavouriteDto;
 import com.almozara.tattooart_connect.service.favourite.FavouriteService;
 import com.almozara.tattooart_connect.util.helper.AuthorityHelper;
 import jakarta.validation.Valid;
-import jdk.dynalink.linker.LinkerServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,28 +23,28 @@ public class FavouriteController {
     private final FavouriteService favouriteService;
 
     @GetMapping
-    public ResponseEntity<List<FavouriteDto>> getAll(){
+    public ResponseEntity<List<FavouriteDto>> getAll() {
         List<FavouriteDto> favourites = favouriteService.getAll();
         return new ResponseEntity<>(favourites, HttpStatus.OK);
     }
 
-//    @PreAuthorize(AuthorityHelper.ROLE_USER)
+    @PreAuthorize(AuthorityHelper.ROLE_USER)
     @GetMapping("user/{idUser}")
-    public ResponseEntity<List<FavouriteDto>> findByIdUser(@PathVariable Long idUser){
+    public ResponseEntity<List<FavouriteDto>> findByIdUser(@PathVariable Long idUser) {
         List<FavouriteDto> favsByUser = favouriteService.findByIdUser(idUser);
         return new ResponseEntity<>(favsByUser, HttpStatus.OK);
     }
 
-//    @PreAuthorize(AuthorityHelper.ROLE_USER)
+    @PreAuthorize(AuthorityHelper.ROLE_USER)
     @PostMapping
-    public ResponseEntity<FavouriteDto> addFavourite(@RequestBody @Valid FavouriteDto favouriteDto){
+    public ResponseEntity<FavouriteDto> addFavourite(@RequestBody @Valid FavouriteDto favouriteDto) {
         FavouriteDto fav = favouriteService.addFavourite(favouriteDto);
         return new ResponseEntity<>(fav, HttpStatus.CREATED);
     }
 
-//    @PreAuthorize(AuthorityHelper.ROLE_USER)
+    @PreAuthorize(AuthorityHelper.ROLE_USER)
     @DeleteMapping("/{idFavourite}")
-    public ResponseEntity<Void> addFavourite(@PathVariable Long idFavourite){
+    public ResponseEntity<Void> addFavourite(@PathVariable Long idFavourite) {
         favouriteService.deleteFavourite(idFavourite);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
