@@ -82,7 +82,9 @@ public class MainSecurityConfig {
                                 ApiConfig.API_BASE_PATH + ReviewController.URL + "/**"
                         ).permitAll()
                         .requestMatchers(ApiConfig.API_BASE_PATH + ReviewController.URL + "/**").authenticated()
-                        
+                        // Open Api Swagger
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
                         .anyRequest().authenticated() // Por defecto pedir autenticación
                 )
                 .exceptionHandling(exception -> exception

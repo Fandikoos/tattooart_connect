@@ -5,6 +5,7 @@ import com.almozara.tattooart_connect.dto.ImageDto;
 import com.almozara.tattooart_connect.service.image.ImageService;
 import com.almozara.tattooart_connect.service.storage.StorageService;
 import com.almozara.tattooart_connect.util.helper.AuthorityHelper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URLConnection;
 import java.util.List;
 
+@Tag(name = "Image Controller", description = "Image operations")
 @RestController
 @RequestMapping(ApiConfig.API_BASE_PATH + ImageController.URL)
 @RequiredArgsConstructor

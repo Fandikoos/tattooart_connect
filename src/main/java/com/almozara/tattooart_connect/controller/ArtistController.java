@@ -4,6 +4,7 @@ import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.dto.ArtistDto;
 import com.almozara.tattooart_connect.service.artist.ArtistService;
 import com.almozara.tattooart_connect.util.helper.AuthorityHelper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,13 +14,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Artist Controller", description = "Artist operations")
 @RestController
 @RequestMapping(ApiConfig.API_BASE_PATH + ArtistController.URL)
 @RequiredArgsConstructor
 public class ArtistController {
 
     public static final String URL = "/artist";
-    
+
     private final ArtistService artistService;
 
     @GetMapping
