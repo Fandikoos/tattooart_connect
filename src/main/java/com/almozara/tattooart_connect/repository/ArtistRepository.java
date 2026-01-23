@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ArtistRepository extends JpaRepository<ArtistEntity, Long> {
     List<ArtistEntity> findByTattooStudioIdStudio(Long tattooStudioId);
+
+    List<ArtistEntity> findByTattooStudio_User_IdUser(Long idUser);
 }

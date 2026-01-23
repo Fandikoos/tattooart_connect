@@ -28,7 +28,6 @@ public class FavouriteController {
         return new ResponseEntity<>(favourites, HttpStatus.OK);
     }
 
-    @PreAuthorize(AuthorityHelper.ROLE_USER)
     @GetMapping("user/{idUser}")
     public ResponseEntity<List<FavouriteDto>> findByIdUser(@PathVariable Long idUser) {
         List<FavouriteDto> favsByUser = favouriteService.findByIdUser(idUser);
@@ -44,7 +43,7 @@ public class FavouriteController {
 
     @PreAuthorize(AuthorityHelper.ROLE_USER)
     @DeleteMapping("/{idFavourite}")
-    public ResponseEntity<Void> addFavourite(@PathVariable Long idFavourite) {
+    public ResponseEntity<Void> deleteFavourite(@PathVariable Long idFavourite) {
         favouriteService.deleteFavourite(idFavourite);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
