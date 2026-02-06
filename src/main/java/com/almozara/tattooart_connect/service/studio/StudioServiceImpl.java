@@ -26,6 +26,7 @@ public class StudioServiceImpl implements StudioService {
     private final StudioRepository studioRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public PageResponse<StudioDto> findAll(Pageable pageable) {
         Page<StudioEntity> pagesStudiosEntities = studioRepository.findAll(pageable);
         List<StudioDto> studios = pagesStudiosEntities.map(studioMapper::transferToDto).getContent();
@@ -41,6 +42,7 @@ public class StudioServiceImpl implements StudioService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public StudioDto findById(Long idStudio) throws NotFoundException {
         StudioEntity studioEntity = studioRepository.findById(idStudio)
                 .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));

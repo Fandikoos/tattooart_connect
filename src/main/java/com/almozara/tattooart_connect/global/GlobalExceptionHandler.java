@@ -36,9 +36,15 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<MessageDto> accessDeniedException(AccessDeniedException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(new MessageDto(HttpStatus.FORBIDDEN, "cannot access this resource"));
+    public ResponseEntity<MessageDto> accessDeniedException(AccessDeniedException e, WebRequest request) {
+        log.warn("Access Denied Exception: {}", e.getMessage());
+        MessageDto apiError = new MessageDto(
+                LocalDateTime.now(),
+                HttpStatus.FORBIDDEN,
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                "You do not have permission to access this resource",
+                request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiError);
     }
 
     // Respuesta que llegara cuando se intercepten las excepciones a las peticiones, llegaria algo de este estilo:
