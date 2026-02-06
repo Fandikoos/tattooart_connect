@@ -2,13 +2,15 @@ package com.almozara.tattooart_connect.service.studio;
 
 import com.almozara.tattooart_connect.dto.StudioDto;
 import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
+import com.almozara.tattooart_connect.record.PageResponse;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface StudioService {
 
-    List<StudioDto> findAll();
+    PageResponse<StudioDto> findAll(Pageable pageable);
 
     StudioDto findById(Long idStudio) throws NotFoundException;
 

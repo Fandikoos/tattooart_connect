@@ -2,6 +2,7 @@ package com.almozara.tattooart_connect.controller;
 
 import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.dto.StudioDto;
+import com.almozara.tattooart_connect.record.PageResponse;
 import com.almozara.tattooart_connect.service.studio.StudioService;
 import com.almozara.tattooart_connect.util.helper.AuthorityHelper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,8 +34,8 @@ public class StudioController {
     // Ejemplo para poner roles a rutas, en este caso seria cualquiera de los roles, pero quiero que esta ruta no necesite roles
 //    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping
-    public ResponseEntity<List<StudioDto>> getAll() {
-        return new ResponseEntity<>(studioService.findAll(), HttpStatus.OK);
+    public ResponseEntity<PageResponse<StudioDto>> getAll(@PageableDefault(sort = "idStudio") Pageable pageable) {
+        return new ResponseEntity<>(studioService.findAll(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{idStudio}")
