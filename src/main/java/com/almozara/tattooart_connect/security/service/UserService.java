@@ -1,5 +1,7 @@
 package com.almozara.tattooart_connect.security.service;
 
+import com.almozara.tattooart_connect.global.exceptions.DuplicateResourceException;
+import com.almozara.tattooart_connect.global.exceptions.message.UserValidation;
 import com.almozara.tattooart_connect.mapper.UserMapper;
 import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.almozara.tattooart_connect.security.dto.CreateUserDto;
@@ -32,10 +34,10 @@ public class UserService {
 
     public CreateUserDto create(CreateUserDto userDto) {
         if (userRepository.existsByUsername(userDto.getUsername())) {
-            throw new RuntimeException("Username already in use");
+            throw new DuplicateResourceException(UserValidation.USERNAME_ALREADY_EXISTS);
         }
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new RuntimeException("Email already in use");
+            throw new DuplicateResourceException(UserValidation.EMAIL_ALREADY_EXISTS);
         }
 
         // Transformar lista de roles (string) del dto a RoleEnum
@@ -52,10 +54,10 @@ public class UserService {
 
     public CreateUserDto createAdmin(CreateUserDto userDto) {
         if (userRepository.existsByUsername(userDto.getUsername())) {
-            throw new RuntimeException("Username already in use");
+            throw new DuplicateResourceException(UserValidation.USERNAME_ALREADY_EXISTS);
         }
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new RuntimeException("Email already in use");
+            throw new DuplicateResourceException(UserValidation.EMAIL_ALREADY_EXISTS);
         }
 
         List<String> rolesAdmin = Arrays.asList("ROLE_ADMIN", "ROLE_USER");
@@ -70,10 +72,10 @@ public class UserService {
 
     public CreateUserDto createUser(CreateUserDto userDto) {
         if (userRepository.existsByUsername(userDto.getUsername())) {
-            throw new RuntimeException("Username already in use");
+            throw new DuplicateResourceException(UserValidation.USERNAME_ALREADY_EXISTS);
         }
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new RuntimeException("Email already in use");
+            throw new DuplicateResourceException(UserValidation.EMAIL_ALREADY_EXISTS);
         }
 
         List<String> roleUser = List.of("ROLE_USER");
@@ -92,7 +94,7 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(authentication);
         UserEntity user = userRepository.findByUsername(dto.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(UserValidation.USER_NOT_FOUND));
         ProfileUserDto userDto = userMapper.transferProfileUserDto(user);
         return new JwtTokenDto(token, userDto);
     }

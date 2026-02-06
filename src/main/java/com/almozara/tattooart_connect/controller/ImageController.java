@@ -4,17 +4,21 @@ import com.almozara.tattooart_connect.config.ApiConfig;
 import com.almozara.tattooart_connect.dto.ImageDto;
 import com.almozara.tattooart_connect.service.image.ImageService;
 import com.almozara.tattooart_connect.service.storage.StorageService;
+import com.almozara.tattooart_connect.util.helper.AuthorityHelper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URLConnection;
 import java.util.List;
 
+@Tag(name = "Image Controller", description = "Image operations")
 @RestController
 @RequestMapping(ApiConfig.API_BASE_PATH + ImageController.URL)
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ public class ImageController {
     private final ImageService imageService;
     private final StorageService storageService;
 
+    @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
     @PostMapping("/upload")
     public ResponseEntity<ImageDto> upload(@PathVariable Long idStudio, @RequestParam("file") MultipartFile file) {
         return new ResponseEntity<>(imageService.uploadImage(idStudio, file), HttpStatus.OK);
@@ -35,13 +40,14 @@ public class ImageController {
         return new ResponseEntity<>(imageService.getImagesByStudio(idStudio), HttpStatus.OK);
     }
 
+    @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
     @DeleteMapping("/{idImage}")
     public ResponseEntity<Void> delete(@PathVariable Long idImage) {
         imageService.deleteImage(idImage);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Se añade el :.+ para indicar que los nombres al tener piuntos, pueden ser jpg, png, jpeg..., luego ya busca el recurso (imagen y lo devuelve), sede angular, desde
+    // Se añade el :.+ para indicar que los nombres al tener puntos, pueden ser jpg, png, jpeg..., luego ya busca el recurso (imagen y lo devuelve), desde angular, desde
     // la etiqueta img es donde se hace esta petición para bsucar este recurso
     @GetMapping("/{fileName:.+}")
     public ResponseEntity<Resource> getStudioImage(@PathVariable Long idStudio, @PathVariable String fileName) {

@@ -3,12 +3,14 @@ package com.almozara.tattooart_connect.service.artist;
 import com.almozara.tattooart_connect.domain.ArtistEntity;
 import com.almozara.tattooart_connect.dto.ArtistDto;
 import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
+import com.almozara.tattooart_connect.global.exceptions.UserException;
 import com.almozara.tattooart_connect.mapper.ArtistMapper;
 import com.almozara.tattooart_connect.repository.ArtistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,6 +34,7 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ArtistDto> findAllArtist() {
         // Obtienes las entidades, las transforma en dtos y las devuelve
         List<ArtistEntity> artistEntities = artistRepository.findAll();
@@ -46,6 +49,20 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ArtistDto> findByIdUser(Long idUser) {
+        if (idUser == null) {
+            throw new UserException("It is necessary user id, actually is null");
+        }
+        List<ArtistEntity> artistEntities = artistRepository.findByTattooStudio_User_IdUser(idUser);
+        if (artistEntities == null || artistEntities.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return artistMapper.transferToDtoList(artistEntities);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public ArtistDto findById(Long idArtist) {
         ArtistEntity artistEntity = artistRepository.findById(idArtist)
                 .orElseThrow(() -> new NotFoundException("Artist with " + idArtist + " not exist"));

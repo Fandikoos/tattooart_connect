@@ -6,8 +6,11 @@ import com.almozara.tattooart_connect.global.exceptions.ExistingIdException;
 import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.global.exceptions.UserException;
 import com.almozara.tattooart_connect.mapper.StudioMapper;
+import com.almozara.tattooart_connect.record.PageResponse;
 import com.almozara.tattooart_connect.repository.StudioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +26,23 @@ public class StudioServiceImpl implements StudioService {
     private final StudioRepository studioRepository;
 
     @Override
-    public List<StudioDto> findAll() {
-        List<StudioEntity> studioEntities = studioRepository.findAll();
-        return studioMapper.transferToDtoList(studioEntities);
+    @Transactional(readOnly = true)
+    public PageResponse<StudioDto> findAll(Pageable pageable) {
+        Page<StudioEntity> pagesStudiosEntities = studioRepository.findAll(pageable);
+        List<StudioDto> studios = pagesStudiosEntities.map(studioMapper::transferToDto).getContent();
+        return new PageResponse<>(
+                studios,
+                pagesStudiosEntities.getNumber(),
+                pagesStudiosEntities.getSize(),
+                pagesStudiosEntities.getTotalElements(),
+                pagesStudiosEntities.getTotalPages(),
+                pagesStudiosEntities.isFirst(),
+                pagesStudiosEntities.isLast()
+        );
     }
 
     @Override
+    @Transactional(readOnly = true)
     public StudioDto findById(Long idStudio) throws NotFoundException {
         StudioEntity studioEntity = studioRepository.findById(idStudio)
                 .orElseThrow(() -> new NotFoundException("Studio with id " + idStudio + " not found"));

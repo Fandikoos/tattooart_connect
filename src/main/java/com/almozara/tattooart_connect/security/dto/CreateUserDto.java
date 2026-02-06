@@ -2,8 +2,8 @@ package com.almozara.tattooart_connect.security.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CreateUserDto {
 
     @NotBlank(message = "Username is required")
@@ -22,6 +23,6 @@ public class CreateUserDto {
     private String email;
     @NotBlank(message = "Password is required")
     private String password;
-//    @NotEmpty(message = "Roles are required")
+    //    @NotEmpty(message = "Roles are required")
     private List<String> roles = new ArrayList<>();
 }
