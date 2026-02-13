@@ -1,5 +1,7 @@
 package com.almozara.tattooart_connect.security.service;
 
+import com.almozara.tattooart_connect.global.exceptions.DuplicateResourceException;
+import com.almozara.tattooart_connect.global.exceptions.message.UserValidation;
 import com.almozara.tattooart_connect.mapper.UserMapper;
 import com.almozara.tattooart_connect.security.domain.UserEntity;
 import com.almozara.tattooart_connect.security.dto.CreateUserDto;
@@ -10,7 +12,6 @@ import com.almozara.tattooart_connect.security.jwt.JwtProvider;
 import com.almozara.tattooart_connect.security.repository.UserRepository;
 import com.almozara.tattooart_connect.util.enums.RoleEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,12 +32,12 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
 
-    public CreateUserDto create(CreateUserDto userDto){
-        if (userRepository.existsByUsername(userDto.getUsername())){
-            throw new RuntimeException("Username already in use");
+    public CreateUserDto create(CreateUserDto userDto) {
+        if (userRepository.existsByUsername(userDto.getUsername())) {
+            throw new DuplicateResourceException(UserValidation.USERNAME_ALREADY_EXISTS);
         }
-        if (userRepository.existsByEmail(userDto.getEmail())){
-            throw new RuntimeException("Email already in use");
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new DuplicateResourceException(UserValidation.EMAIL_ALREADY_EXISTS);
         }
 
         // Transformar lista de roles (string) del dto a RoleEnum
@@ -51,12 +52,12 @@ public class UserService {
 
     }
 
-    public CreateUserDto createAdmin(CreateUserDto userDto){
-        if (userRepository.existsByUsername(userDto.getUsername())){
-            throw new RuntimeException("Username already in use");
+    public CreateUserDto createAdmin(CreateUserDto userDto) {
+        if (userRepository.existsByUsername(userDto.getUsername())) {
+            throw new DuplicateResourceException(UserValidation.USERNAME_ALREADY_EXISTS);
         }
-        if (userRepository.existsByEmail(userDto.getEmail())){
-            throw new RuntimeException("Email already in use");
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new DuplicateResourceException(UserValidation.EMAIL_ALREADY_EXISTS);
         }
 
         List<String> rolesAdmin = Arrays.asList("ROLE_ADMIN", "ROLE_USER");
@@ -69,12 +70,12 @@ public class UserService {
         return userMapper.transferToCreateUserDto(savedUser);
     }
 
-    public CreateUserDto createUser(CreateUserDto userDto){
-        if (userRepository.existsByUsername(userDto.getUsername())){
-            throw new RuntimeException("Username already in use");
+    public CreateUserDto createUser(CreateUserDto userDto) {
+        if (userRepository.existsByUsername(userDto.getUsername())) {
+            throw new DuplicateResourceException(UserValidation.USERNAME_ALREADY_EXISTS);
         }
-        if (userRepository.existsByEmail(userDto.getEmail())){
-            throw new RuntimeException("Email already in use");
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new DuplicateResourceException(UserValidation.EMAIL_ALREADY_EXISTS);
         }
 
         List<String> roleUser = List.of("ROLE_USER");
@@ -87,14 +88,18 @@ public class UserService {
         return userMapper.transferToCreateUserDto(savedUser);
     }
 
-    public JwtTokenDto login(LoginUserDto dto){
+    public JwtTokenDto login(LoginUserDto dto) {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(authentication);
         UserEntity user = userRepository.findByUsername(dto.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(UserValidation.USER_NOT_FOUND));
         ProfileUserDto userDto = userMapper.transferProfileUserDto(user);
         return new JwtTokenDto(token, userDto);
+    }
+
+    public String findUsernameByIdUser(Long idUser) {
+        return userRepository.findUsernameByIdUser(idUser);
     }
 }

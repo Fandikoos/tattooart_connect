@@ -1,18 +1,16 @@
 package com.almozara.tattooart_connect.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
 @Entity
 @Table(name = ArtistEntity.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ArtistEntity {
 
     // Nombre tabla
@@ -32,6 +30,7 @@ public class ArtistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID_ARTIST_COLUMN)
+    @EqualsAndHashCode.Include
     private Long idArtist;
 
     @Column(name = ArtistEntity.NAME_COLUMN, nullable = false)
@@ -50,7 +49,7 @@ public class ArtistEntity {
     private String dni;
 
     @Column(name = ArtistEntity.PHONE_COLUMN)
-    private String phone;
+    private int phone;
 
     @Column(name = IMAGE_ARTIST_COLUMN)
     private String imageArtist;

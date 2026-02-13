@@ -1,9 +1,7 @@
 package com.almozara.tattooart_connect.security.config;
 
 import com.almozara.tattooart_connect.config.ApiConfig;
-import com.almozara.tattooart_connect.controller.ArtistController;
-import com.almozara.tattooart_connect.controller.FavouriteController;
-import com.almozara.tattooart_connect.controller.StudioController;
+import com.almozara.tattooart_connect.controller.*;
 import com.almozara.tattooart_connect.security.controller.AuthController;
 import com.almozara.tattooart_connect.security.jwt.JwtEntryPoint;
 import com.almozara.tattooart_connect.security.jwt.JwtFilter;
@@ -11,10 +9,9 @@ import com.almozara.tattooart_connect.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -57,17 +54,36 @@ public class MainSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // Nueva forma de deshabilitar CSRF
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Habilitar Cors con mi configuración
                 .authorizeHttpRequests(auth -> auth
-                        // TODO Agrupar rutias públicas en una clase Utils
-                        // Rutas públicas que no requieren de Token
-                                .requestMatchers(ApiConfig.API_BASE_PATH + AuthController.URL + "/**").permitAll()
-                                .requestMatchers(ApiConfig.API_BASE_PATH + ArtistController.URL + "/**").permitAll()
-                                .requestMatchers(ApiConfig.API_BASE_PATH + StudioController.URL + "/**").permitAll()
-                                .requestMatchers(ApiConfig.API_BASE_PATH + FavouriteController.URL + "/**").permitAll()
-
-                                // Rutas privadas que si que requieren token
-//                                .requestMatchers(ApiConfig.API_BASE_PATH + FavouriteController.URL + "/favourite/**").authenticated()
-//                         .requestMatchers(ApiConfig.API_BASE_PATH + StudioController.URL + "/protected/**").authenticated() // Ejemplo futuro
-                        // .requestMatchers(ApiConfig.API_BASE_PATH + "/appointments/**").authenticated() // Ejemplo futuro
+                        // Routes
+                        // AuthController
+                        .requestMatchers(ApiConfig.API_BASE_PATH + AuthController.URL + "/**").permitAll()
+                        // ArtistController, los GET son publicos, no requieren token, el resto SI que requieren
+                        .requestMatchers(HttpMethod.GET,
+                                ApiConfig.API_BASE_PATH + ArtistController.URL + "/**"
+                        ).permitAll()
+                        .requestMatchers(ApiConfig.API_BASE_PATH + ArtistController.URL + "/**").authenticated()
+                        // StudioController, los GET son publicos, no requieren token, el resto SI que requieren
+                        .requestMatchers(HttpMethod.GET,
+                                ApiConfig.API_BASE_PATH + StudioController.URL + "/**"
+                        ).permitAll()
+                        .requestMatchers(ApiConfig.API_BASE_PATH + StudioController.URL + "/**").authenticated()
+                        // FavouriteController
+                        .requestMatchers(HttpMethod.GET,
+                                ApiConfig.API_BASE_PATH + FavouriteController.URL + "/**"
+                        ).permitAll()
+                        .requestMatchers(ApiConfig.API_BASE_PATH + FavouriteController.URL + "/**").authenticated()
+                        // ImageController
+                        .requestMatchers(HttpMethod.GET,
+                                ApiConfig.API_BASE_PATH + ImageController.URL + "/**"
+                        ).permitAll()
+                        .requestMatchers(ApiConfig.API_BASE_PATH + ImageController.URL + "/**").authenticated()
+                        // ReviewController
+                        .requestMatchers(HttpMethod.GET,
+                                ApiConfig.API_BASE_PATH + ReviewController.URL + "/**"
+                        ).permitAll()
+                        .requestMatchers(ApiConfig.API_BASE_PATH + ReviewController.URL + "/**").authenticated()
+                        // Open Api Swagger
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                         .anyRequest().authenticated() // Por defecto pedir autenticación
                 )

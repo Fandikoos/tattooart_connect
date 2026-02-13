@@ -3,18 +3,19 @@ package com.almozara.tattooart_connect.domain;
 
 import com.almozara.tattooart_connect.security.domain.UserEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.yaml.snakeyaml.events.Event;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+
+@Entity
+@Table(name = FavouriteEntity.TABLE_NAME)
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = FavouriteEntity.TABLE_NAME )
+@Getter
+@Setter
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class FavouriteEntity {
 
     public static final String TABLE_NAME = "ET_FAVOURITE";
@@ -27,13 +28,14 @@ public class FavouriteEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID_COLUMN)
+    @EqualsAndHashCode.Include
     private Long idFavourite;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_USER_COLUMN, referencedColumnName = UserEntity.ID_USER_COLUMN)
     private UserEntity userEntity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_STUDIO_COLUMN, referencedColumnName = StudioEntity.ID_STUDIO_COLUMN)
     private StudioEntity studioEntity;
 

@@ -2,12 +2,15 @@ package com.almozara.tattooart_connect;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+// Configuración para lanzar los tests
+@ActiveProfiles("test")
 class TattooartConnectApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

@@ -3,23 +3,25 @@ package com.almozara.tattooart_connect.service.artist;
 import com.almozara.tattooart_connect.domain.ArtistEntity;
 import com.almozara.tattooart_connect.dto.ArtistDto;
 import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
+import com.almozara.tattooart_connect.global.exceptions.UserException;
 import com.almozara.tattooart_connect.mapper.ArtistMapper;
 import com.almozara.tattooart_connect.repository.ArtistRepository;
-import com.almozara.tattooart_connect.service.storage.StorageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ArtistServiceImpl implements ArtistService{
+public class ArtistServiceImpl implements ArtistService {
 
     private final ArtistMapper artistMapper;
     private final ArtistRepository artistRepository;
 
     @Override
+    @Transactional
     public ArtistDto createArtist(ArtistDto artistDto) {
         // Convierte Dto -> Entidad
         ArtistEntity artistEntity = artistMapper.transferToEntity(artistDto);
@@ -32,6 +34,7 @@ public class ArtistServiceImpl implements ArtistService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ArtistDto> findAllArtist() {
         // Obtienes las entidades, las transforma en dtos y las devuelve
         List<ArtistEntity> artistEntities = artistRepository.findAll();
@@ -39,12 +42,27 @@ public class ArtistServiceImpl implements ArtistService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ArtistDto> findByIdStudio(Long idTattooStudio) {
         List<ArtistEntity> artistEntity = artistRepository.findByTattooStudioIdStudio(idTattooStudio);
         return artistMapper.transferToDtoList(artistEntity);
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ArtistDto> findByIdUser(Long idUser) {
+        if (idUser == null) {
+            throw new UserException("It is necessary user id, actually is null");
+        }
+        List<ArtistEntity> artistEntities = artistRepository.findByTattooStudio_User_IdUser(idUser);
+        if (artistEntities == null || artistEntities.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return artistMapper.transferToDtoList(artistEntities);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public ArtistDto findById(Long idArtist) {
         ArtistEntity artistEntity = artistRepository.findById(idArtist)
                 .orElseThrow(() -> new NotFoundException("Artist with " + idArtist + " not exist"));
@@ -52,6 +70,7 @@ public class ArtistServiceImpl implements ArtistService{
     }
 
     @Override
+    @Transactional
     public void update(Long idArtist, ArtistDto artistDto) {
         ArtistEntity existingArtistEntity = artistRepository.findById(idArtist)
                 .orElseThrow(() -> new NotFoundException("Artist with " + idArtist + " not exist"));
@@ -59,15 +78,16 @@ public class ArtistServiceImpl implements ArtistService{
         existingArtistEntity.setImageArtist(artistDto.getImageArtist());
         existingArtistEntity.setDni(artistDto.getDni());
         existingArtistEntity.setName(artistDto.getName());
-        existingArtistEntity.setPhone(String.valueOf(artistDto.getPhone()));
+        existingArtistEntity.setPhone(artistDto.getPhone());
         existingArtistEntity.setEmail(artistDto.getEmail());
         existingArtistEntity.setSurname(artistDto.getSurname());
         existingArtistEntity.setSecondSurname(artistDto.getSecondSurname());
         existingArtistEntity.getTattooStudio().setIdStudio(artistDto.getIdTattooStudio());
         artistRepository.save(existingArtistEntity);
-}
+    }
 
     @Override
+    @Transactional
     public void delete(Long idArtist) {
         ArtistEntity artistEntity = artistRepository.findById(idArtist)
                 .orElseThrow(() -> new NotFoundException("Artist with " + idArtist + " not exist"));

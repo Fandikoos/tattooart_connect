@@ -1,27 +1,47 @@
 package com.almozara.tattooart_connect.mapper;
 
-import com.almozara.tattooart_connect.domain.ArtistEntity;
 import com.almozara.tattooart_connect.domain.FavouriteEntity;
-import com.almozara.tattooart_connect.dto.ArtistDto;
+import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.dto.FavouriteDto;
+import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
+import com.almozara.tattooart_connect.repository.StudioRepository;
+import com.almozara.tattooart_connect.security.domain.UserEntity;
+import com.almozara.tattooart_connect.security.repository.UserRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface FavouriteMapper {
+public abstract class FavouriteMapper {
 
+    @Autowired
+    protected UserRepository userRepository;
+
+    @Autowired
+    protected StudioRepository studioRepository;
+
+    // Entity -> DTO
     @Mapping(source = "userEntity.idUser", target = "idUser")
     @Mapping(source = "studioEntity.idStudio", target = "idStudio")
-    FavouriteDto transferToDto(FavouriteEntity favouriteEntity);
+    public abstract FavouriteDto transferToDto(FavouriteEntity favouriteEntity);
 
-    @Mapping(source = "idUser", target = "userEntity.idUser")
-    @Mapping(source = "idStudio", target = "studioEntity.idStudio")
-    FavouriteEntity transferToEntity(FavouriteDto favouriteDto);
+    // DTO -> Entity
+    @Mapping(source = "idUser", target = "userEntity")
+    @Mapping(source = "idStudio", target = "studioEntity")
+    public abstract FavouriteEntity transferToEntity(FavouriteDto favouriteDto);
 
-    List<FavouriteDto> transferToDtoList(List<FavouriteEntity> favouriteEntities);
+    public abstract List<FavouriteDto> transferToDtoList(List<FavouriteEntity> favouriteEntities);
 
+    protected UserEntity map(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+    }
 
-
+    protected StudioEntity mapStudio(Long id) {
+        return studioRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Studio not found"));
+    }
 }
+

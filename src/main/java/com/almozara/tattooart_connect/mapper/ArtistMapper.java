@@ -1,21 +1,35 @@
 package com.almozara.tattooart_connect.mapper;
 
 import com.almozara.tattooart_connect.domain.ArtistEntity;
+import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.dto.ArtistDto;
-import org.mapstruct.InheritInverseConfiguration;
+import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
+import com.almozara.tattooart_connect.repository.StudioRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-// Usamos el StudioMapper para mapear directamente el Studio de Artist
 @Mapper(componentModel = "spring")
-public interface ArtistMapper {
+public abstract class ArtistMapper {
 
-    //    Esto indicaría que el campo artistEntity.tattooStudio.idStudio se va a mapear al campo idTattooStudio en el ArtistDto
+    @Autowired
+    protected StudioRepository studioRepository;
+
+    // Entity -> DTO
     @Mapping(source = "tattooStudio.idStudio", target = "idTattooStudio")
-    ArtistDto transferToDto(ArtistEntity artistEntity);
-    @Mapping(target = "tattooStudio", ignore = true)
-    ArtistEntity transferToEntity(ArtistDto artistDto);
-    List<ArtistDto> transferToDtoList(List<ArtistEntity> artistEntities);
+    public abstract ArtistDto transferToDto(ArtistEntity artistEntity);
+
+    // DTO -> Entity
+    @Mapping(source = "idTattooStudio", target = "tattooStudio")
+    public abstract ArtistEntity transferToEntity(ArtistDto artistDto);
+
+    public abstract List<ArtistDto> transferToDtoList(List<ArtistEntity> artistEntities);
+
+    // Long -> StudioEntity (MapStruct lo usará automáticamente)
+    protected StudioEntity map(Long id) {
+        return studioRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Studio not found"));
+    }
 }

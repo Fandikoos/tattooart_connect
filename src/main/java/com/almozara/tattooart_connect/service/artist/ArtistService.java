@@ -7,10 +7,17 @@ import java.util.List;
 public interface ArtistService {
 
     ArtistDto createArtist(ArtistDto artistDto);
+
     List<ArtistDto> findAllArtist();
+
     List<ArtistDto> findByIdStudio(Long idTattooStudio);
+
+    List<ArtistDto> findByIdUser(Long idUser);
+
     ArtistDto findById(Long idArtist);
+
     void update(Long idArtist, ArtistDto artistDto);
+
     void delete(Long idArtist);
 
 }
