@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Tag(name = "Studio Controller", description = "Studios operations")
@@ -43,9 +44,20 @@ public class StudioController {
         return new ResponseEntity<>(studioService.findById(idStudio), HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Get list of studios by filters",
+            description = "Get list of studios by name, rating or both filters"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Find Studios"),
+            @ApiResponse(responseCode = "404", description = "Studios not found")
+    })
     @GetMapping("/search")
-    public ResponseEntity<List<StudioDto>> findByName(@RequestParam String name) {
-        List<StudioDto> studiosByName = studioService.findByName(name);
+    public ResponseEntity<PageResponse<StudioDto>> findByName(@PageableDefault(sort = "idStudio") Pageable pageable,
+                                                              @RequestParam(required = false) String name,
+                                                              @RequestParam(required = false) BigDecimal minRating,
+                                                              @RequestParam(required = false) BigDecimal maxRating) {
+        PageResponse<StudioDto> studiosByName = studioService.findByFilters(pageable, name, minRating, maxRating);
         return new ResponseEntity<>(studiosByName, HttpStatus.OK);
     }
 
