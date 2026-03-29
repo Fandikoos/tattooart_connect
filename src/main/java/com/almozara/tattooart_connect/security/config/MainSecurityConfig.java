@@ -82,6 +82,8 @@ public class MainSecurityConfig {
                                 ApiConfig.API_BASE_PATH + ReviewController.URL + "/**"
                         ).permitAll()
                         .requestMatchers(ApiConfig.API_BASE_PATH + ReviewController.URL + "/**").authenticated()
+                        // BookingController - solo accesible para ROLE_ADMIN
+                        .requestMatchers(ApiConfig.API_BASE_PATH + BookingController.URL + "/**").hasAuthority("ROLE_ADMIN")
                         // Open Api Swagger
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
