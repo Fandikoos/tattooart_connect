@@ -20,7 +20,7 @@ public interface StudioService {
 
     void delete(Long idStudio);
 
-    List<StudioDto> findByName(String name);
+    PageResponse<StudioDto> findByFilters(Pageable pageable, String name, BigDecimal minRating, BigDecimal maxRating);
 
     List<StudioDto> findByIdsStudios(List<Long> idsStudios);
 

@@ -5,9 +5,11 @@ import com.almozara.tattooart_connect.dto.StudioDto;
 import com.almozara.tattooart_connect.global.exceptions.ExistingIdException;
 import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.global.exceptions.UserException;
+import com.almozara.tattooart_connect.global.exceptions.ValidationException;
 import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.record.PageResponse;
 import com.almozara.tattooart_connect.repository.StudioRepository;
+import com.almozara.tattooart_connect.util.helper.ListUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -93,12 +95,25 @@ public class StudioServiceImpl implements StudioService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<StudioDto> findByName(String name) {
-        List<StudioEntity> studioEntitiesByName = studioRepository.findByNameContainingIgnoreCase(name);
-        if (studioEntitiesByName != null && !studioEntitiesByName.isEmpty()) {
-            return studioMapper.transferToDtoList(studioEntitiesByName);
+    public PageResponse<StudioDto> findByFilters(Pageable pageable, String name, BigDecimal minRating, BigDecimal maxRating) {
+        if (minRating != null && maxRating != null && minRating.compareTo(maxRating) > 0) {
+            throw new ValidationException("minRating cannot be greater than maxRating");
         }
-        return new ArrayList<>();
+
+        Page<StudioEntity> studioEntitiesByFilters = studioRepository.findByFilters(pageable, name, minRating, maxRating);
+        List<StudioDto> studios = studioEntitiesByFilters.map(studioMapper::transferToDto).getContent();
+        if (!ListUtils.isNullOrEmpty(studios)) {
+            return new PageResponse<>(
+                    studios,
+                    studioEntitiesByFilters.getNumber(),
+                    studioEntitiesByFilters.getSize(),
+                    studioEntitiesByFilters.getTotalElements(),
+                    studioEntitiesByFilters.getTotalPages(),
+                    studioEntitiesByFilters.isFirst(),
+                    studioEntitiesByFilters.isLast()
+            );
+        }
+        return new PageResponse<>(new ArrayList<>(), pageable.getPageNumber(), pageable.getPageSize(), 0, 0, true, true);
     }
 
     @Override
