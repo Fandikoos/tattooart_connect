@@ -1,10 +1,7 @@
 package com.almozara.tattooart_connect.global;
 
 import com.almozara.tattooart_connect.global.dto.MessageDto;
-import com.almozara.tattooart_connect.global.exceptions.DuplicateResourceException;
-import com.almozara.tattooart_connect.global.exceptions.ExistingIdException;
-import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
-import com.almozara.tattooart_connect.global.exceptions.UserException;
+import com.almozara.tattooart_connect.global.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -113,5 +110,17 @@ public class GlobalExceptionHandler {
                 e.getMessage(),
                 request.getDescription(false).replace("uri=", ""));
         return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<MessageDto> handleValidationException(ValidationException e, WebRequest request) {
+        log.error("Validation Exception: {}", e.getMessage(), e);
+        MessageDto apiError = new MessageDto(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST,
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                e.getMessage(),
+                request.getDescription(false).replace("uri=", ""));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 }

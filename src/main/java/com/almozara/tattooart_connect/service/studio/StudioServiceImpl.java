@@ -2,11 +2,10 @@ package com.almozara.tattooart_connect.service.studio;
 
 import com.almozara.tattooart_connect.domain.StudioEntity;
 import com.almozara.tattooart_connect.dto.StudioDto;
-import com.almozara.tattooart_connect.global.exceptions.BadRequestException;
 import com.almozara.tattooart_connect.global.exceptions.ExistingIdException;
 import com.almozara.tattooart_connect.global.exceptions.NotFoundException;
 import com.almozara.tattooart_connect.global.exceptions.UserException;
-import com.almozara.tattooart_connect.global.exceptions.message.StudioValidation;
+import com.almozara.tattooart_connect.global.exceptions.ValidationException;
 import com.almozara.tattooart_connect.mapper.StudioMapper;
 import com.almozara.tattooart_connect.record.PageResponse;
 import com.almozara.tattooart_connect.repository.StudioRepository;
@@ -98,7 +97,7 @@ public class StudioServiceImpl implements StudioService {
     @Transactional(readOnly = true)
     public PageResponse<StudioDto> findByFilters(Pageable pageable, String name, BigDecimal minRating, BigDecimal maxRating) {
         if (minRating != null && maxRating != null && minRating.compareTo(maxRating) > 0) {
-            throw new BadRequestException(StudioValidation.INVALID_RATING_TO_FILTER);
+            throw new ValidationException("minRating cannot be greater than maxRating");
         }
 
         Page<StudioEntity> studioEntitiesByFilters = studioRepository.findByFilters(pageable, name, minRating, maxRating);
