@@ -55,7 +55,8 @@ public class MainSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Habilitar Cors con mi configuración
                 .authorizeHttpRequests(auth -> auth
                         // Routes
-                        // AuthController
+                        // AuthController — createAdmin solo accesible por ROLE_ADMIN
+                        .requestMatchers(HttpMethod.POST, ApiConfig.API_BASE_PATH + AuthController.URL + "/createAdmin").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(ApiConfig.API_BASE_PATH + AuthController.URL + "/**").permitAll()
                         // ArtistController, los GET son publicos, no requieren token, el resto SI que requieren
                         .requestMatchers(HttpMethod.GET,

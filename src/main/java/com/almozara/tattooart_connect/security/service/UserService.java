@@ -40,8 +40,8 @@ public class UserService {
             throw new DuplicateResourceException(UserValidation.EMAIL_ALREADY_EXISTS);
         }
 
-        // Transformar lista de roles (string) del dto a RoleEnum
-        List<RoleEnum> roles = userDto.getRoles().stream().map(RoleEnum::valueOf).toList();
+        // Siempre asignar ROLE_USER, ignorando lo que venga en el DTO
+        List<RoleEnum> roles = List.of(RoleEnum.ROLE_USER);
 
         UserEntity userEntity = userMapper.transferCreateUserDtoToEntity(userDto);
         String password = passwordEncoder.encode(userEntity.getPassword());

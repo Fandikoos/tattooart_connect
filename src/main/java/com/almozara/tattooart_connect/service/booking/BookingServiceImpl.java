@@ -46,6 +46,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<BookingDto> findByIdStudioOrderByStartDateTime(List<Long> idStudios) {
+        return bookingMapper.transferToDtoList(bookingRepository.findByTattooStudioIdStudioOrderByStartDateTime(idStudios));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public BookingDto findById(Long idBooking) {
         BookingEntity entity = bookingRepository.findById(idBooking)
                 .orElseThrow(() -> new NotFoundException("Booking with id " + idBooking + " not found"));

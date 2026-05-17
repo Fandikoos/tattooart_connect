@@ -33,3 +33,7 @@ build/
 .vscode/
 
 /storage/
+
+### Claude Code ###
+CLAUDE.md
+/.claude/settings.local.json

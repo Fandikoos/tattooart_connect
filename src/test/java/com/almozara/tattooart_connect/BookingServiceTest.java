@@ -152,6 +152,48 @@ public class BookingServiceTest {
     }
 
     // -------------------------------------------------------------------------
+    // findByIdStudioOrderByStartDateTime
+    // -------------------------------------------------------------------------
+
+    @Test
+    void shouldFindByIdStudioOrderByStartDateTime() {
+        List<Long> idStudios = List.of(1L, 2L);
+        List<BookingEntity> entities = List.of(
+                buildEntity(1L),
+                buildEntity(2L),
+                buildEntity(3L)
+        );
+        List<BookingDto> dtos = List.of(
+                buildDto(1L),
+                buildDto(2L),
+                buildDto(3L)
+        );
+
+        when(bookingRepository.findByTattooStudioIdStudioOrderByStartDateTime(idStudios)).thenReturn(entities);
+        when(bookingMapper.transferToDtoList(entities)).thenReturn(dtos);
+
+        List<BookingDto> result = bookingService.findByIdStudioOrderByStartDateTime(idStudios);
+
+        assertNotNull(result);
+        assertEquals(3, result.size());
+        verify(bookingRepository).findByTattooStudioIdStudioOrderByStartDateTime(idStudios);
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenNoBookingsForStudios() {
+        List<Long> idStudios = List.of(99L);
+
+        when(bookingRepository.findByTattooStudioIdStudioOrderByStartDateTime(idStudios)).thenReturn(List.of());
+        when(bookingMapper.transferToDtoList(List.of())).thenReturn(List.of());
+
+        List<BookingDto> result = bookingService.findByIdStudioOrderByStartDateTime(idStudios);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(bookingRepository).findByTattooStudioIdStudioOrderByStartDateTime(idStudios);
+    }
+
+    // -------------------------------------------------------------------------
     // findById
     // -------------------------------------------------------------------------
 
