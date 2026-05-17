@@ -2,6 +2,7 @@ package com.almozara.tattooart_connect.security.jwt;
 
 import com.almozara.tattooart_connect.global.dto.MessageDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @Component
 public class JwtEntryPoint implements AuthenticationEntryPoint {
     private static final Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
+    private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Override
     public void commence(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) throws IOException {
@@ -30,7 +32,7 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
         );
         res.setContentType("application/json");
         res.setStatus(dto.getStatus().value());
-        res.getWriter().write(new ObjectMapper().writeValueAsString(dto));
+        res.getWriter().write(MAPPER.writeValueAsString(dto));
         res.getWriter().flush();
         res.getWriter().close();
     }

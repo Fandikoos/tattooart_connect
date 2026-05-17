@@ -14,6 +14,8 @@ public interface BookingService {
 
     List<BookingDto> findByIdArtist(Long idArtist);
 
+    List<BookingDto> findByIdStudioOrderByStartDateTime(List<Long> idStudios);
+
     BookingDto findById(Long idBooking);
 
     BookingDto update(Long idBooking, BookingDto bookingDto);

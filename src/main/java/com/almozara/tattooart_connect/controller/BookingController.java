@@ -49,6 +49,12 @@ public class BookingController {
     }
 
     @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
+    @GetMapping("/studio/{idStudio}/order-by-date")
+    public ResponseEntity<List<BookingDto>> findByIdStudioOrderByStartDateTime(@PathVariable List<Long> idStudio) {
+        return new ResponseEntity<>(bookingService.findByIdStudioOrderByStartDateTime(idStudio), HttpStatus.OK);
+    }
+
+    @PreAuthorize(AuthorityHelper.ROLE_ADMIN)
     @GetMapping("/artist/{idArtist}")
     public ResponseEntity<List<BookingDto>> findByIdArtist(@PathVariable Long idArtist) {
         return new ResponseEntity<>(bookingService.findByIdArtist(idArtist), HttpStatus.OK);
